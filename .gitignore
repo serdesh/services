@@ -1,5 +1,4 @@
-config/*
-!config/web.php
+config/web.php
 nbproject/
 runtime/
 vendor/
