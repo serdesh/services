@@ -66,13 +66,4 @@ return array (
       '@kartik/select2' => $vendorDir . '/kartik-v/yii2-widget-select2',
     ),
   ),
-  'inblank/yii2-transliter' => 
-  array (
-    'name' => 'inblank/yii2-transliter',
-    'version' => '0.1.1.0',
-    'alias' => 
-    array (
-      '@inblank/transliter' => $vendorDir . '/inblank/yii2-transliter/src',
-    ),
-  ),
 );
