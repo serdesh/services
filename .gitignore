@@ -1,5 +1,6 @@
 config/*
 !config/web.php
+nbproject/
 runtime/
 tests/
 vendor/*
