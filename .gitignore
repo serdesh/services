@@ -2,15 +2,5 @@ config/*
 !config/web.php
 nbproject/
 runtime/
-tests/
-vendor/*
-!vendor/kartik-v/
-!vendor/yii2mod/
-!vendor/yiisoft/
-vendor/yiisoft/*
-!vendor/yiisoft/extensions.php
-!vendor/yiisoft/yii2/
-vendor/yiisoft/yii2/*
-!vendor/yiisoft/yii2/di/
-!vendor/autoload.php
+vendor/
 web/uploads/
