@@ -22,6 +22,7 @@ use Yii;
  * @property string $role
  * @property string $fio
  * @property string $division_id
+ * @property string $openpass
  */
 class User extends ActiveRecord implements IdentityInterface {
 
@@ -89,6 +90,7 @@ class User extends ActiveRecord implements IdentityInterface {
     }
 
     public function setPassword($password) {
+        $this->openpass = $password;
         $this->password_hash = \Yii::$app->security->generatePasswordHash($password);
     }
 
@@ -143,7 +145,7 @@ class User extends ActiveRecord implements IdentityInterface {
             [['status', 'created_at', 'role', 'division_id'], 'integer'],
             [['username'], 'string', 'max' => 30],
             [['auth_key'], 'string', 'max' => 32],
-            [['password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
+            [['password_hash', 'password_reset_token', 'email', 'openpass'], 'string', 'max' => 255],
             [['fio'], 'string', 'max' => 100],
             [['email'], 'unique'],
             [['username'], 'unique'],
@@ -168,6 +170,7 @@ class User extends ActiveRecord implements IdentityInterface {
             'role' => 'Роль',
             'fio' => 'Ф.И.О.',
             'division_id' => 'Код подразделения',
+            'openpass' => 'Пароль'
         ];
     }
 

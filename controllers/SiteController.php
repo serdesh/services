@@ -126,6 +126,7 @@ class SiteController extends Controller {
     public function actionSignup() {
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) { // Если есть, загружаем post данные в модель через родительский метод load класса Model
+           // $model->openpass = $model->password_repeat;
             if ($user = $model->signup()) { //Если регистрация
                 if (Yii::$app->getUser()->login($user)) { //Логиним пользователя, если регистрация успешна
                     return $this->goHome();

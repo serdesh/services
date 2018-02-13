@@ -14,6 +14,7 @@ class SignupForm extends Model {
     public $password_repeat;
     public $fio;
     public $division_id;
+    public $openpass;
 
     public function rules() { //// Эти правила будут использоваться при валидации: формы ввода, с помощью вызова метода validate(), при попытки сохранения в таблицу БД
         return [
@@ -28,6 +29,7 @@ class SignupForm extends Model {
             ['password_repeat', 'compare', 'compareAttribute'=>'password'],
             //['password_repeat', 'string', 'min' => 6],
             ['fio', 'string', 'max' => 100],
+            ['openpass', 'string', 'max' => 50],
             ['fio', 'unique', 'targetClass' => 'app\models\User', 'message' => 'Вы уже зарегистрированы!'],
             ['division_id', 'integer'],
             ['division_id', 'required', 'message' => 'Выберите одно из значений поля "Подразделение"'],

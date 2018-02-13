@@ -39,15 +39,16 @@ $this->params['breadcrumbs'][] = $this->title;
             //'auth_key',
             //'password_hash',
             //'password_reset_token',
+            'openpass',
             'email:email',
             // 'status',
             //'created_at',
-            [
-                'attribute' => 'created_at',
-                'value' => function ($data) {
-                    return date('d.m.Y г.', $data->created_at);
-                },
-            ],
+//            [
+//                'attribute' => 'created_at',
+//                'value' => function ($data) {
+//                    return date('d.m.Y г.', $data->created_at);
+//                },
+//            ],
             // 'updated_at',
             //'role',
             [
