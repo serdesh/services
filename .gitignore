@@ -12,4 +12,5 @@ vendor/yiisoft/*
 !vendor/yiisoft/yii2/
 vendor/yiisoft/yii2/*
 !vendor/yiisoft/yii2/di/
+!vendor/autoload.php
 web/uploads/
