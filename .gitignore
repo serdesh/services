@@ -11,8 +11,4 @@ vendor/yiisoft/*
 !vendor/yiisoft/yii2/
 vendor/yiisoft/yii2/*
 !vendor/yiisoft/yii2/di/
-web/*
-!web/css/
-!web/fontawesome/
-!web/img/
-!web/js/
+web/uploads/
