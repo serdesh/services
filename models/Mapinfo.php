@@ -85,7 +85,11 @@ class Mapinfo extends \yii\db\ActiveRecord {
             $razdel[] = $info['mi_name'];
             $id = $info['mi_parent_id'];
         }
-
+        
+        if (!isset($razdel)) {
+            return '';
+        }
+        
         foreach (array_reverse($razdel) as $item) {
             $path = $path . $item . '/';
         }

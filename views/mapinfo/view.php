@@ -10,7 +10,7 @@ $this->title = $model->mi_name;
 $this->params['breadcrumbs'][] = ['label' => 'Разделы', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="mapinfo-view">
+<div class="mapinfo-view container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

@@ -10,7 +10,7 @@ $this->title = 'Добавление раздела';
 $this->params['breadcrumbs'][] = ['label' => 'Карта сайта', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="mapinfo-create">
+<div class="mapinfo-create container">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
