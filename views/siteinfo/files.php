@@ -36,9 +36,9 @@ $this->params['breadcrumbs'][] = 'Файлы';
         </thead>
         <tbody>
             <?php
+            $num = 0;
             if (is_dir($sourcepath)) {
                 $files = scandir($sourcepath);
-                $num = 0;
                 foreach ($files as $file) {
                     $fullpath = $sourcepath . '/' . $file;
                     if (is_file($fullpath) == TRUE) {
@@ -59,12 +59,34 @@ $this->params['breadcrumbs'][] = 'Файлы';
                                 }
                             }
                         }
-                        require '_ftpmodal.php';
-                        echo '</td>';
-                        echo '</tr>';
+                    }
+                }
+            } else {
+                //\yii\helpers\VarDumper::dump($sourcepath);
+                if (is_file($sourcepath)) {
+                    $file = basename($sourcepath);
+                    $num += 1;
+                    echo '<tr>';
+                    echo '<td>' . $num . '</td>';
+                    echo '<td>';
+                    echo Html::a($file, $sourcepath);
+                    echo '</td>';
+                    echo '<td>' . round(filesize($sourcepath) / 1024) . ' Кб</td>';
+                    echo '<td class="status">';
+                    if (User::isAdmin()) {
+                        if (isset($result)) {
+                            if ($result == TRUE) {
+                                echo '<span class="msg-ok">Готово!</span><br>';
+                            } elseif ($result == FALSE) {
+                                echo '<span class="msg-error">Ошибка!</span><br>';
+                            }
+                        }
                     }
                 }
             }
+            require '_ftpmodal.php';
+            echo '</td>';
+            echo '</tr>';
             ?>
         </tbody>
     </table>
