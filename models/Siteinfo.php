@@ -99,24 +99,28 @@ class Siteinfo extends \yii\db\ActiveRecord {
     }
 
     public static function getListfiles($pathDir) {
-        $sourcepath = $pathDir;
-        $list = '';
-        if (isset($sourcepath) && is_dir($sourcepath)) {
-            $files = scandir($sourcepath);
-            $list = '<ul>';
-            foreach ($files as $file) {
-                $fullpath = $sourcepath . '/' . $file;
-                if (is_file($fullpath) == TRUE) {
-                    $list = $list . '<li>';
-                    $list = $list . Html::a($file, $fullpath);
-                    $list = $list . '</li>';
-                }
-            }
-            $list = $list . '</ul>';
-//return \yii\helpers\VarDumper::dump($list);
-            return $list;
+        if (stristr($pathDir, '/vestnik/')) { //Если вестник, значит передан путь к файлу
+            $filename = basename($pathDir);
+            return Html::a($filename, $pathDir);
         } else {
-            return 'Ошибка в пути к файлам';
+            $sourcepath = $pathDir;
+            $list = '';
+            if (isset($sourcepath) && is_dir($sourcepath)) {
+                $files = scandir($sourcepath);
+                $list = '<ul>';
+                foreach ($files as $file) {
+                    $fullpath = $sourcepath . '/' . $file;
+                    if (is_file($fullpath) == TRUE) {
+                        $list = $list . '<li>';
+                        $list = $list . Html::a($file, $fullpath);
+                        $list = $list . '</li>';
+                    }
+                }
+                $list = $list . '</ul>';
+                return $list;
+            } else {
+                return 'Ошибка в пути к файлам';
+            }
         }
     }
 

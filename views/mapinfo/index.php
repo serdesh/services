@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use app\models\Mapinfo;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\MapinfoSearch */
@@ -11,7 +12,7 @@ use yii\widgets\Pjax;
 $this->title = 'Карта сайта';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="mapinfo-index">
+<div class="mapinfo-index container-fluid">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]);  ?>
@@ -28,7 +29,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'mi_id',
             'mi_name',
-            'mi_parent_id',
+            //'mi_parent_id',
+            [
+                'attribute' => 'me_parent_id',
+                'label' => 'Родительский раздел',
+                'value' => function($data) {
+                    return Mapinfo::getFullpathcategory($data->mi_parent_id);
+                }
+            ],
             //'mi_url:text',
             [
                 'attribute' => 'mi_url',

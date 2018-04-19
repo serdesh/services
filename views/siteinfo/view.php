@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 use app\models\User;
 use app\models\Division;
 use app\models\Mapinfo;
-use app\models\Statusinfo;
+//use app\models\Statusinfo;
 use app\models\Siteinfo;
 
 /* @var $this yii\web\View */
