@@ -141,8 +141,8 @@ if (User::isAdmin()) {
                         </div>-->
             <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-12">
-                    <a href="/uploads/programm/SpravkiBKsetup_ver._2.4.msi">
-                        <h1>Скачать программное обеспечение "Справки БК" (версия 2.4)</h1>
+                    <a href="/uploads/programm/SpravkiBKsetup_ver._2.4.1.msi">
+                        <h1>Скачать программное обеспечение "Справки БК" (версия 2.4.1)</h1>
                     </a>
                     <h1><small>Подготовка справок о доходах, расходах, об имуществе и обязательствах имущественного характера</small></h1>
                     <hr> 
