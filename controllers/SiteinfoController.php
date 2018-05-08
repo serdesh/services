@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Siteinfo;
 use app\models\SiteinfoSearch;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
@@ -19,12 +20,14 @@ use ZipArchive;
 /**
  * SiteinfoController implements the CRUD actions for Siteinfo model.
  */
-class SiteinfoController extends Controller {
+class SiteinfoController extends Controller
+{
 
     /**
      * @inheritdoc
      */
-    public function behaviors() {
+    public function behaviors()
+    {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -39,19 +42,20 @@ class SiteinfoController extends Controller {
      * Lists all Siteinfo models.
      * @return mixed
      */
-    public function actionIndex() {
+    public function actionIndex()
+    {
         $searchModel = new SiteinfoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         if (Yii::$app->user->isGuest) {
             echo '<script> alert("Для работы с сервисами авторизируйтесь или пройдите процедуру регистрации!")</script>';
             return $this->render('/site/index', [
-                        'searchModel' => $searchModel,
-                        'dataProvider' => $dataProvider,
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
             ]);
         }
         return $this->render('index', [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -59,10 +63,12 @@ class SiteinfoController extends Controller {
      * Displays a single Siteinfo model.
      * @param string $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
-    public function actionView($id) {
+    public function actionView($id)
+    {
         return $this->render('view', [
-                    'model' => $this->findModel($id),
+            'model' => $this->findModel($id),
         ]);
     }
 
@@ -71,7 +77,8 @@ class SiteinfoController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate() {
+    public function actionCreate()
+    {
         $model = new Siteinfo();
         $attribute = "";
         if ($model->load(Yii::$app->request->post())) {
@@ -88,7 +95,7 @@ class SiteinfoController extends Controller {
             if (!$model->si_text && !$model->Files) {
                 $model->addError($attribute, 'Необходимо заполнить поле "Текст информации" или прикрепить файлы.');
                 return $this->render('create', [
-                            'model' => $model,]);
+                    'model' => $model,]);
             }
 
             $add_permission = Mapinfo::findOne(['mi_id' => $model->si_map_id])->mi_add_permission;
@@ -96,7 +103,7 @@ class SiteinfoController extends Controller {
             if ($add_permission == 0) {
                 $model->addError($attribute, 'В разделе "' . $map_name . '" размещение информации невозможно.');
                 return $this->render('create', [
-                            'model' => $model,]);
+                    'model' => $model,]);
             }
         }
 
@@ -115,7 +122,7 @@ class SiteinfoController extends Controller {
             return $this->redirect(['index']);
         } else {
             return $this->render('create', [
-                        'model' => $model,
+                'model' => $model,
             ]);
         }
     }
@@ -125,8 +132,10 @@ class SiteinfoController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
-    public function actionUpdate($id) {
+    public function actionUpdate($id)
+    {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -137,15 +146,19 @@ class SiteinfoController extends Controller {
                 $model->si_end_public = Date('Y-m-d', strtotime($model->si_end_public)); //Преобразовываем дату для Датапикера
             }
             return $this->render('update', [
-                        'model' => $model,
+                'model' => $model,
             ]);
         }
     }
 
     /**
      * Меняем значение статуса на '2' т.е. опубликовано
+     * @var int $id Код информации
+     * @return string
+     * @throws NotFoundHttpException
      */
-    Public function actionSetstatus($id) {
+    Public function actionSetstatus($id)
+    {
         $model = $this->findModel($id);
         $model->si_status = 2;
         $model->save();
@@ -158,7 +171,8 @@ class SiteinfoController extends Controller {
      * @param string $id
      * @return mixed
      */
-    public function actionDelete($id) {
+    public function actionDelete($id)
+    {
         //Проверяем права на удаление 
         if (User::isAdmin() or Yii::$app->user->identity->id == Siteinfo::findOne(['si_id' => $id])->si_user_id) { //Еслиадмин или автор материала
             //Удаляем папку
@@ -178,7 +192,8 @@ class SiteinfoController extends Controller {
      * @return Siteinfo the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id) {
+    protected function findModel($id)
+    {
         if (($model = Siteinfo::findOne($id)) !== null) {
             return $model;
         } else {
@@ -186,7 +201,8 @@ class SiteinfoController extends Controller {
         }
     }
 
-    protected function removeDirectory($dir) {
+    protected function removeDirectory($dir)
+    {
         if ($objs = glob($dir . "/*")) {
             foreach ($objs as $obj) {
                 is_dir($obj) ? removeDirectory($obj) : unlink($obj);
@@ -197,44 +213,20 @@ class SiteinfoController extends Controller {
         }
     }
 
-    public function actionFiles($id) {
+    public function actionFiles($id)
+    {
         $model = $this->findModel($id);
-        
+
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-             return $this->render('files', ['model' => $this->findModel($id), 'result' => $this->sendFtp($model)]);
+//            return $this->render('files', ['model' => $this->findModel($id), 'result' => $this->sendFtp($model)]);
+            return $this->render('files', ['model' => $this->findModel($id), 'result' => Siteinfo::sendFtp($model)]);
         } else {
             return $this->render('files', ['model' => $this->findModel($id)]);
         }
     }
 
-    private function sendFtp($model) { //Отправка файла по FTP
-        $ftp = new \yii2mod\ftp\FtpClient();
-        if ($model->desiredname) {
-            $fileName = $model->desiredname;
-        } else {
-                $fileName = $model->selectedfile;
-        }
-         
-        $localPath = $model->si_path_attach . '/' . $model->selectedfile; //Путь к локальному файлу
-
-        $query = Ftpaccounts::findOne(['ftp_id' => $model->ftp_id]);
-        $ftpLogin = $query->ftp_login;
-        $ftpPass = $query->ftp_pass;
-        $host = $query->ftp_site;
-
-        $ftp->connect($host);
-        
-        if ($ftp->login($ftpLogin, $ftpPass)) {
-            $count = $ftp->count();
-            $ftp->put($fileName, $localPath, FTP_BINARY);
-            if ($count !=  $ftp->count()) {
-                return TRUE;
-            }
-        }
-        return FALSE;
-    }
-
-    public function actionZipdirectory($sourceDir, $destDir, $id) {
+    public function actionZipdirectory($sourceDir, $destDir, $id)
+    {
         $zip = new ZipArchive();
         //$filename = "D:/test/arhiv.zip";
         $filename = $destDir . '/' . microtime(true) . '.zip';
@@ -253,7 +245,7 @@ class SiteinfoController extends Controller {
                 }
             }
         }
-        $zippedcount = $zip->numFiles;
+        //$zippedcount = $zip->numFiles;
         $zip->close();
         unset($zip);
         //return $this->render('files', ['model' => $this->findModel($id), 'zippedcount' => $zippedcount]);
@@ -262,7 +254,8 @@ class SiteinfoController extends Controller {
         Yii::$app->response->sendFile($filename, null, ['mimeType' => 'application/octet-stream']);
     }
 
-    public function actionCopyfiles($sourceDir, $destDir, $id) {
+    public function actionCopyfiles($sourceDir, $destDir, $id)
+    {
         $count = 0;
         if (!file_exists($destDir)) {
             mkdir($destDir, 0777, TRUE);

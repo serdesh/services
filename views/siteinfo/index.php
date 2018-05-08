@@ -9,9 +9,11 @@ use app\models\Statusinfo;
 //use yii\web\View;
 use yii\helpers\Url;
 
-/* @var $this yii\web\View */
-/* @var $searchModel app\models\SiteinfoSearch */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/**
+ * @var $this yii\web\View
+ * @var $searchModel app\models\SiteinfoSearch
+ * @var $dataProvider yii\data\ActiveDataProvider
+ */
 
 $this->title = 'Информация для сайта';
 $this->params['breadcrumbs'][] = $this->title;

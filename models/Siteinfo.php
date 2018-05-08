@@ -23,6 +23,13 @@ use yii\helpers\Html;
  */
 class Siteinfo extends \yii\db\ActiveRecord {
 
+    /**
+     * @var array $Files Файлы, прикрепленные к материалу
+     * @var int $ftp_id ID поля в таблице ftp аккаунтов
+     * @var string $selectedfile Выбранный для загрузки файл
+     * @var string $desiredname имя файла - указанное пользователем
+     * @var string $ftp_pass ФТП пароль
+     */
     public $Files;
     public $ftp_id;
     public $selectedfile;
@@ -122,6 +129,39 @@ class Siteinfo extends \yii\db\ActiveRecord {
                 return 'Ошибка в пути к файлам';
             }
         }
+    }
+
+    /**
+     * Send a file via FTP
+     * @var $model
+     * @var $ftp  \yii2mod\ftp\FtpClient()
+     * @return bool
+     * @throws \yii2mod\ftp\FtpException
+     */
+    public static function sendFtp($model)
+    {
+        $ftp = new \yii2mod\ftp\FtpClient();
+        if ($model->desiredname) {
+            $fileName = $model->desiredname;
+        } else {
+            $fileName = $model->selectedfile;
+        }
+
+        $localPath = $model->si_path_attach . '/' . $model->selectedfile; //Путь к локальному файлу
+
+        $query = Ftpaccounts::findOne(['ftp_id' => $model->ftp_id]);
+        $ftpLogin = $query->ftp_login;
+        $ftpPass = $query->ftp_pass;
+        $host = $query->ftp_site;
+
+        $ftp->connect($host, false, 21, 60);
+
+        if ($ftp->login($ftpLogin, $ftpPass)) {
+            //$ftp->nb_put($fileName, $localPath, FTP_BINARY);
+            $ftp->put($fileName, $localPath, FTP_BINARY);
+            return $ftp->nlist();
+        }
+        return null;
     }
 
 }

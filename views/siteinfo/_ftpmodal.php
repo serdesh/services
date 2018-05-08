@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @var $model app\models\Siteinfo
+ * @var array $list_login Список фтп логинов
+ */
+
 use yii\bootstrap\Modal;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
@@ -19,7 +24,7 @@ Modal::begin([
 ?>
 <div class="ftp-form modal-body">
     <?php $form = ActiveForm::begin(); ?>
-    <?php echo $form->field($model, 'selectedfile')->textInput(['value' => $file, 'disabled' => TRUE]) ?>
+    <?php echo $form->field($model, 'selectedfile')->textInput(['value' => $file]) ?>
     <?php echo $form->field($model, 'desiredname')->textInput(['value' => $file]) ?>
     <?php echo $form->field($model, 'ftp_id')->dropDownList($list_login)->label('FTP логин') ?>
     <?= Html::submitButton('Отправить', ['class' => 'btn btn-primary']) ?>

@@ -1,20 +1,25 @@
 <?php
 
-//use yii\grid\GridView;
-//use yii\widgets\Pjax;
-//use app\models\Siteinfo;
+/**
+ * @var $model app\models\Siteinfo
+ */
+
 use app\models\User;
 use yii\helpers\Html;
 
-//use yii\helpers\FileHelper;
-//use yii\helpers\Url;
+//$count = 0;
+//$zippedcount = 0;
 
-$count = 0;
-$zippedcount = 0;
+/** @var int $num Counter */
 $num = 0;
-$zipPath = "uploads/temp";
+
+/** @var string $sourcepath Path to the attached file */
 $sourcepath = $model->si_path_attach;
-$destFilepath = $zipPath . '/' . $model->si_id;
+
+/** @var string $zipPath Path to temporary zip file */
+$zipPath = "uploads/temp";
+
+//$destinationFilePath = $zipPath . '/' . $model->si_id;
 
 $this->title = 'Файлы к материалу: ' . $model->si_name_info;
 $this->params['breadcrumbs'][] = ['label' => 'Информация для сайта', 'url' => ['index']];
@@ -27,67 +32,65 @@ $this->params['breadcrumbs'][] = 'Файлы';
 
     <table class="table table-striped table-hover">
         <thead>
-            <tr>
-                <th>#</th>
-                <th>Имя файла</th>
-                <th>Размер</th>
-                <th>...</th>
-            </tr>
+        <tr>
+            <th>#</th>
+            <th>Имя файла</th>
+            <th>Размер</th>
+            <th>...</th>
+        </tr>
         </thead>
         <tbody>
-            <?php
-            $num = 0;
-            if (is_dir($sourcepath)) {
-                $files = scandir($sourcepath);
-                foreach ($files as $file) {
-                    $fullpath = $sourcepath . '/' . $file;
-                    if (is_file($fullpath) == TRUE) {
-                        $num += 1;
-                        echo '<tr>';
-                        echo '<td>' . $num . '</td>';
-                        echo '<td>';
-                        echo Html::a($file, $fullpath);
-                        echo '</td>';
-                        echo '<td>' . round(filesize($fullpath) / 1024) . ' Кб</td>';
-                        echo '<td class="status">';
-                        if (User::isAdmin()) {
-                            if (isset($result)) {
-                                if ($result == TRUE) {
-                                    echo '<span class="msg-ok">Готово!</span><br>';
-                                } elseif ($result == FALSE) {
-                                    echo '<span class="msg-error">Ошибка!</span><br>';
-                                }
-                            }
-                        }
-                    }
-                }
-            } else {
-                //\yii\helpers\VarDumper::dump($sourcepath);
-                if (is_file($sourcepath)) {
-                    $file = basename($sourcepath);
+        <?php
+        $num = 0;
+        if (is_dir($sourcepath)) {
+            $files = scandir($sourcepath);
+            foreach ($files as $file) {
+                $fullPath = $sourcepath . '/' . $file;
+                if (is_file($fullPath) == TRUE) {
                     $num += 1;
                     echo '<tr>';
                     echo '<td>' . $num . '</td>';
                     echo '<td>';
-                    echo Html::a($file, $sourcepath);
+                    echo Html::a($file, $fullPath);
                     echo '</td>';
-                    echo '<td>' . round(filesize($sourcepath) / 1024) . ' Кб</td>';
+                    echo '<td>' . round(filesize($fullPath) / 1024) . ' Кб</td>';
                     echo '<td class="status">';
                     if (User::isAdmin()) {
                         if (isset($result)) {
-                            if ($result == TRUE) {
+                            if ($result) {
                                 echo '<span class="msg-ok">Готово!</span><br>';
-                            } elseif ($result == FALSE) {
+                            } else {
                                 echo '<span class="msg-error">Ошибка!</span><br>';
                             }
                         }
                     }
                 }
             }
-            require '_ftpmodal.php';
+        } elseif (is_file($sourcepath)) {
+            //\yii\helpers\VarDumper::dump($sourcepath);
+            $file = basename($sourcepath);
+            $num += 1;
+            echo '<tr>';
+            echo '<td>' . $num . '</td>';
+            echo '<td>';
+            echo Html::a($file, $sourcepath);
             echo '</td>';
-            echo '</tr>';
-            ?>
+            echo '<td>' . round(filesize($sourcepath) / 1024) . ' Кб</td>';
+            echo '<td class="status">';
+            if (User::isAdmin()) {
+                if (isset($result)) {
+                    if ($result == TRUE) {
+                        echo '<span class="msg-ok">Готово!</span><br>';
+                    } elseif ($result == FALSE) {
+                        echo '<span class="msg-error">Ошибка!</span><br>';
+                    }
+                }
+            }
+        }
+        require '_ftpmodal.php';
+        echo '</td>';
+        echo '</tr>';
+        ?>
         </tbody>
     </table>
     <div class="row">
@@ -99,6 +102,6 @@ $this->params['breadcrumbs'][] = 'Файлы';
             //yii\helpers\VarDumper::dump($model);
             ?>
         </div>
-
     </div>
+    <?= \yii\helpers\VarDumper::dump($result, 5, true);?>
 </div>
