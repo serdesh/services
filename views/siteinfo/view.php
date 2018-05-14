@@ -8,10 +8,10 @@ use app\models\Division;
 use app\models\Mapinfo;
 //use app\models\Statusinfo;
 use app\models\Siteinfo;
+use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Siteinfo */
-
 
 
 $this->title = $model->si_name_info;
@@ -22,10 +22,21 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
+    <div class="btn-group">
         <?php
         if (User::isAdmin()) {
             echo Html::a('Изменить', ['update', 'id' => $model->si_id], ['class' => 'btn btn-primary']);
+            Modal::begin([
+                'header' => '<h2>Отправка файла по FTP</h2>',
+                'toggleButton' => [
+                    'label' => 'Отправить по фтп',
+                    'class' => 'btn btn-info'
+                ],
+//            'footer' => 'Desh@2018  '
+            ]);
+
+            include_once '_ftpmodal.php';
+            Modal::end();
         }
         ?>
 
@@ -40,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ]);
         }
         ?>
-    </p>
+    </div>
     <?php
     $dir = Yii::$app->params['siteinfo_fs'] . '/' . $model->si_path_attach;
     $dir2 = $model->si_path_attach;
@@ -58,13 +69,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'si_id',
-            //'si_user_id',
             [
                 'attribute' => 'si_user_id',
                 'value' => User::findOne(['id' => $model->si_user_id])->fio,
                 'label' => 'Пользовтель'
             ],
-            //'si_division_id',
             [
                 'attribute' => 'si_division_id',
                 'label' => 'Подразделение',
@@ -72,41 +81,36 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Division::findOne(['div_id' => $data->si_division_id])->div_name;
                 },
             ],
-            //'si_data',
             [
                 'attribute' => 'si_data',
                 'value' => date('d.m.Y г. H:i', strtotime($model->si_data)),
             ],
             'si_name_info',
-            //'si_map_id',
             [
                 'attribute' => 'si_map_id',
                 'value' => Mapinfo::getFullpathcategory($model->si_map_id),
             ],
             'si_text:ntext',
-            //'si_end_public',
             [
                 'attribute' => 'si_end_public',
                 'value' => $endPublic,
             ],
-            //'si_path_attach:ntext',
             [
                 'attribute' => 'si_path_attach',
                 'format' => 'raw',
-                //'value' => Html::a($dir, $dir, ['class' => 'view-files', 'target' => 'blank']),
-                'value' => Html::a($dir, Url::to(['/siteinfo/files', 'id' => $model->si_id]), ['class' => 'view-files', 'target' => 'blank']),
+                'value' => $dir,
             ],
             [
                 'attribute' => 'Files',
                 'format' => 'raw',
-                'value' => Siteinfo::getListfiles($model->si_path_attach),
+                'value' => Siteinfo::getListFiles($model->si_path_attach),
             ],
             [
                 'attribute' => 'status',
                 'format' => 'raw',
                 'label' => 'Статус',
-                'value' => function($data) {
-                    $statclass = '';
+                'value' => function ($data) {
+                    //$statclass = '';
                     if ($data->si_status == 1) {
                         $statclass = 'btn-warning glyphicon glyphicon-hourglass';
                     } elseif ($data->si_status == 2) {
@@ -115,14 +119,20 @@ $this->params['breadcrumbs'][] = $this->title;
                         $statclass = 'btn-danger glyphicon glyphicon-remove';
                     }
                     return Html::a('', Url::toRoute(['/siteinfo/setstatus', 'id' => $data->si_id]), [
-                                'class' => 'btn ' . $statclass,
-                                'data-toggle' => 'tooltip',
-                                'title' => 'Ожидает публикации',
-                                'id' => 'btn-waitpublish-' . $data->si_id,
+                        'class' => 'btn ' . $statclass,
+                        'data-toggle' => 'tooltip',
+                        'title' => 'Ожидает публикации',
+                        'id' => 'btn-waitpublish-' . $data->si_id,
                     ]);
                 },
             ],
         ],
     ])
     ?>
+    <?php
+    if (isset($result)) {
+        \yii\helpers\VarDumper::dump($result,1, true);
+    }
+    ?>
+
 </div>

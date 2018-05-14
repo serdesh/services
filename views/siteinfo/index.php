@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
         $buttons = '{view} {delete}';
     }
     ?>
-    <?php Pjax::begin(); ?> 
+    <?php Pjax::begin(); ?>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
@@ -79,27 +79,29 @@ $this->params['breadcrumbs'][] = $this->title;
                     if ($data->si_status == '1') {
                         //Ожидание публикации
                         $img = Html::a('', Url::toRoute(['/siteinfo/setstatus', 'id' => $data->si_id]), [
-                                    'class' => 'btn btn-warning glyphicon glyphicon-hourglass',
-                                    //'onclick' => 'change_permission(); false;',
-                                    'data-toggle' => 'tooltip',
-                                    'title' => 'Ожидает публикации',
-                                    'id' => 'btn-waitpublish-' . $data->si_id,
+                            'class' => 'btn btn-warning glyphicon glyphicon-hourglass',
+                            //'onclick' => 'change_permission(); false;',
+                            'data-toggle' => 'tooltip',
+                            'title' => 'Ожидает публикации',
+                            'id' => 'btn-waitpublish-' . $data->si_id,
                         ]);
                     } elseif ($data->si_status == '2') {
-                        $img = Html::button('', [//Опубликовано
-                                    'class' => 'btn btn-success glyphicon glyphicon-ok',
-                                    //'onclick' => 'change_permission(); false;',
-                                    'data-toggle' => 'tooltip',
-                                    'title' => 'Опубликовано',
-                                    'id' => 'btn-published-' . $data->si_id,
+                        //Опубликовано
+                        $img = Html::button('', [
+                            'class' => 'btn btn-success glyphicon glyphicon-ok',
+                            //'onclick' => 'change_permission(); false;',
+                            'data-toggle' => 'tooltip',
+                            'title' => 'Опубликовано',
+                            'id' => 'btn-published-' . $data->si_id,
                         ]);
                     } elseif ($data->si_status == '3') {
-                        $img = Html::button('', [//Отказано
-                                    'class' => 'btn btn-danger glyphicon glyphicon-remove',
-                                    //'onclick' => 'change_permission(); false;',
-                                    'data-toggle' => 'tooltip',
-                                    'title' => 'Отказано в публикации',
-                                    'id' => 'btn-dontpublish-' . $data->si_id,
+                        //Отказано
+                        $img = Html::button('', [
+                            'class' => 'btn btn-danger glyphicon glyphicon-remove',
+                            //'onclick' => 'change_permission(); false;',
+                            'data-toggle' => 'tooltip',
+                            'title' => 'Отказано в публикации',
+                            'id' => 'btn-dontpublish-' . $data->si_id,
                         ]);
                     } else {
                         $img = Statusinfo::findOne(['stat_id' => $data->si_status])->stat_name;
@@ -111,7 +113,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\ActionColumn',
                 'visibleButtons' => [
                     'delete' => function ($model, $key, $index) {
-                        if (User::isUserAdmin(Yii::$app->user->identity->username) or ( Yii::$app->user->identity->id == $model->si_user_id)) {
+                        if (User::isUserAdmin(Yii::$app->user->identity->username) or (Yii::$app->user->identity->id == $model->si_user_id)) {
                             return true;
                         } else {
                             return false;

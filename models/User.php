@@ -98,6 +98,9 @@ class User extends ActiveRecord implements IdentityInterface {
         $this->auth_key = \Yii::$app->security->generateRandomString();
     }
 
+    /**
+     * @return bool
+     */
     public static function isAdmin() {
         if (!Yii::$app->user->isGuest) {
             $loggedusername = Yii::$app->user->identity->username;

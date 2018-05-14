@@ -67,8 +67,19 @@ class SiteinfoController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()){
+            return $this->render('view', [
+                'model' => $model,
+                'result' => Siteinfo::sendFtp($model)
+
+            ]);
+        }
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+
         ]);
     }
 
@@ -201,27 +212,15 @@ class SiteinfoController extends Controller
         }
     }
 
-    protected function removeDirectory($dir)
-    {
-        if ($objs = glob($dir . "/*")) {
-            foreach ($objs as $obj) {
-                is_dir($obj) ? removeDirectory($obj) : unlink($obj);
-            }
-        }
-        if (is_dir($dir)) {
-            rmdir($dir);
-        }
-    }
-
     public function actionFiles($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 //            return $this->render('files', ['model' => $this->findModel($id), 'result' => $this->sendFtp($model)]);
-            return $this->render('files', ['model' => $this->findModel($id), 'result' => Siteinfo::sendFtp($model)]);
+            return $this->render('files', ['model' => $model, 'result' => Siteinfo::sendFtp($model)]);
         } else {
-            return $this->render('files', ['model' => $this->findModel($id)]);
+            return $this->render('files', ['model' => $model]);
         }
     }
 
