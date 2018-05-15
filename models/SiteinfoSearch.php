@@ -1,5 +1,6 @@
 <?php
 
+
 namespace app\models;
 
 use Yii;
@@ -9,6 +10,7 @@ use app\models\Siteinfo;
 
 /**
  * SiteinfoSearch represents the model behind the search form about `app\models\Siteinfo`.
+ *
  */
 class SiteinfoSearch extends Siteinfo {
 

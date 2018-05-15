@@ -3,10 +3,15 @@
 namespace app\models;
 
 use Yii;
-use app\models\User;
-use app\models\Mapinfo;
-use app\models\Division;
+
+//use app\models\User;
+//use app\models\Mapinfo;
+//use app\models\Division;
 use yii\helpers\Html;
+//use yii\helpers\VarDumper;
+use yii\helpers\FileHelper;
+use yii\helpers\VarDumper;
+use yii2mod\ftp\FtpClient;
 
 /**
  * This is the model class for table "{{%siteinfo}}".
@@ -21,8 +26,16 @@ use yii\helpers\Html;
  * @property string $si_end_public
  * @property string $si_path_attach
  */
-class Siteinfo extends \yii\db\ActiveRecord {
+class Siteinfo extends \yii\db\ActiveRecord
+{
 
+    /**
+     * @var array $Files Файлы, прикрепленные к материалу
+     * @var int $ftp_id ID поля в таблице ftp аккаунтов
+     * @var string $selectedfile Выбранный для загрузки файл
+     * @var string $desiredname имя файла - указанное пользователем
+     * @var string $ftp_pass ФТП пароль
+     */
     public $Files;
     public $ftp_id;
     public $selectedfile;
@@ -32,14 +45,16 @@ class Siteinfo extends \yii\db\ActiveRecord {
     /**
      * @inheritdoc
      */
-    public static function tableName() {
+    public static function tableName()
+    {
         return '{{%siteinfo}}';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules() {
+    public function rules()
+    {
         return [
             [['si_name_info'], 'required'],
             [['si_user_id', 'si_division_id', 'si_map_id', 'si_status', 'ftp_id'], 'integer'],
@@ -54,7 +69,8 @@ class Siteinfo extends \yii\db\ActiveRecord {
     /**
      * @inheritdoc
      */
-    public function attributeLabels() {
+    public function attributeLabels()
+    {
         return [
             'si_id' => 'Код',
             'si_user_id' => 'Код пользователя',
@@ -73,7 +89,8 @@ class Siteinfo extends \yii\db\ActiveRecord {
         ];
     }
 
-    static function isAuthor($infoID) {
+    static function isAuthor($infoID)
+    {
         $authorID = static::findOne(['si_id' => $infoID])->si_user_id;
         if ($authorID != Yii::$app->user->identity->id) {
             return FALSE;
@@ -82,29 +99,39 @@ class Siteinfo extends \yii\db\ActiveRecord {
         }
     }
 
-    static function getNameInfo($infoId) {
+    static function getNameInfo($infoId)
+    {
         return static::findOne(['si_id' => $infoId])->si_name_info;
     }
 
-    public function getEmployee() {
+    public function getEmployee()
+    {
         return $this->hasOne(User::className(), ['id' => 'si_user_id']);
     }
 
-    public function getSection() {
+    public function getSection()
+    {
         return $this->hasOne(Mapinfo::className(), ['mi_id' => 'si_map_id']);
     }
 
-    public function getDivisions() {
+    public function getDivisions()
+    {
         return $this->hasOne(Division::className(), ['div_id' => 'si_division_id']);
     }
 
-    public static function getListfiles($pathDir) {
-        if (stristr($pathDir, '/vestnik/')) { //Если вестник, значит передан путь к файлу
-            $filename = basename($pathDir);
-            return Html::a($filename, $pathDir);
+    /**
+     * Получаем ссылку на файл или список ссылок на файлы, в зависимости от передаваемого пути (путь к файлу или путь к папке)
+     * @param $path Путь к папке или к файлу
+     * @return string
+     */
+    public static function getListFiles($path)
+    {
+        if (is_file($path)) {
+            $filename = basename($path);
+            return Html::a($filename, $path);
         } else {
-            $sourcepath = $pathDir;
-            $list = '';
+            $sourcepath = $path;
+            //$list = '';
             if (isset($sourcepath) && is_dir($sourcepath)) {
                 $files = scandir($sourcepath);
                 $list = '<ul>';
@@ -119,9 +146,79 @@ class Siteinfo extends \yii\db\ActiveRecord {
                 $list = $list . '</ul>';
                 return $list;
             } else {
-                return 'Ошибка в пути к файлам';
+                return '<b>Файлы не найдены</b>';
             }
         }
+    }
+
+    /**
+     * Получает список файлов
+     * @param $path
+     * @return array
+     */
+    public static function getFilesInArray($path)
+    {
+//        $list = [];
+        if (is_file($path)) {
+            $list[] = $path;
+        } elseif (is_dir($path)) {
+            $list = FileHelper::findFiles($path);
+        } else {
+            $list[] ='';
+        }
+        return $list;
+    }
+
+    /**
+     * @param $dir
+     */
+    public function removeDirectory($dir)
+    {
+        if ($objs = glob($dir . "/*")) {
+            foreach ($objs as $obj) {
+                is_dir($obj) ? removeDirectory($obj) : unlink($obj);
+            }
+        }
+        if (is_dir($dir)) {
+            rmdir($dir);
+        }
+    }
+
+    /**
+     * Send a file via FTP
+     * @var $model
+     * @var $ftp  \yii2mod\ftp\FtpClient()
+     * @return bool
+     * @throws \yii2mod\ftp\FtpException
+     */
+    public static function sendFtp($model)
+    {
+        $files = self::getFilesInArray($model->si_path_attach);
+
+        $ftp = new FtpClient();
+
+        if ($model->desiredname) {
+            $fileName = $model->desiredname;
+        } else {
+            $fileName = basename($files[$model->selectedfile]);
+        }
+
+        $localPath = $files[$model->selectedfile]; //Путь к локальному файлу
+        $query = Ftpaccounts::findOne(['ftp_id' => $model->ftp_id]);
+        $ftpLogin = $query->ftp_login;
+        $ftpPass = $query->ftp_pass;
+        $host = $query->ftp_site;
+
+        if ($ftp->connect($host, false, 21, 60)) {
+            if ($ftp->login($ftpLogin, $ftpPass)) {
+                $ftp->pasv(true);
+                $ftp->put($fileName, $localPath, FTP_BINARY);
+                if ($ftp->size($fileName) == filesize($localPath)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }
