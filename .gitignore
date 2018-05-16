@@ -31,6 +31,7 @@ tests/_support/_generated
 
 #vagrant folder
 /.vagrant
+/vagrant
 
 #config folder
 /config
