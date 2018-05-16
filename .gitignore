@@ -32,4 +32,11 @@ tests/_support/_generated
 #vagrant folder
 /.vagrant
 
+#config folder
 /config
+
+#runtime folder
+/runtime
+
+/web/uploads
+/web/assets

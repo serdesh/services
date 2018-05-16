@@ -1,0 +1,30 @@
+2018/05/14 11:56:27 [error] 1977#1977: *217 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Can't use method return value in write context in /app/models/Siteinfo.php on line 138
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /app/web/index.php:0
+PHP message: PHP   2. yii\base\Application->run() /app/web/index.php:13
+PHP message: PHP   3. yii\web\Application->handleRequest() /app/vendor/yiisoft/yii2/base/Application.php:386
+PHP message: PHP   4. yii\base\Module->runAction() /app/vendor/yiisoft/yii2/web/Application.php:103
+PHP message: PHP   5. yii\base\Controller->runAction() /app/vendor/yiisoft/yii2/base/Module.php:528
+PHP message: PHP   6. yii\base\InlineAction->runWithParams() /app/vendor/yiisoft/yii2/base/Controller.php:157
+PHP message: PHP   7. call_user_func_array:{/app/vendor/yiisoft/yii2/base/InlineAction.php:57}() /app/vendor/yiisoft/yii2/base/InlineAction.php:57
+PHP message: PHP   8. app\controllers\SiteinfoController->actionView() /app/vendor/yiisoft/yii2/base/InlineAction.php:57
+PHP message: PHP   9. app\controllers\SiteinfoController->findModel() /app/controllers/SiteinfoController.php:71
+PHP message: PHP  10. spl_autoload_call() /app/controllers/SiteinfoController.php:197
+PHP message: PHP  11. yii\BaseYii::autoload() /app/controllers/SiteinfoController.php:197" while reading response header from upstream, client: 192.168.83.1, server: services.dev, request: "GET /index.php?r=siteinfo%2Fview&id=592 HTTP/1.1", upstream: "fastcgi://unix:/var/run/php/php7.0-fpm.sock:", host: "services", referrer: "http://services/index.php?r=siteinfo%2Ffiles&id=592"
+2018/05/14 11:56:28 [error] 1977#1977: *217 FastCGI sent in stderr: "PHP message: PHP Fatal error:  Can't use method return value in write context in /app/models/Siteinfo.php on line 138
+PHP message: PHP Stack trace:
+PHP message: PHP   1. {main}() /app/web/index.php:0
+PHP message: PHP   2. yii\base\Application->run() /app/web/index.php:13
+PHP message: PHP   3. yii\web\Application->handleRequest() /app/vendor/yiisoft/yii2/base/Application.php:386
+PHP message: PHP   4. yii\base\Module->runAction() /app/vendor/yiisoft/yii2/web/Application.php:103
+PHP message: PHP   5. yii\base\Controller->runAction() /app/vendor/yiisoft/yii2/base/Module.php:528
+PHP message: PHP   6. yii\base\InlineAction->runWithParams() /app/vendor/yiisoft/yii2/base/Controller.php:157
+PHP message: PHP   7. call_user_func_array:{/app/vendor/yiisoft/yii2/base/InlineAction.php:57}() /app/vendor/yiisoft/yii2/base/InlineAction.php:57
+PHP message: PHP   8. app\controllers\SiteController->actionIndex() /app/vendor/yiisoft/yii2/base/InlineAction.php:57
+PHP message: PHP   9. yii\base\Controller->render() /app/controllers/SiteController.php:67
+PHP message: PHP  10. yii\base\View->render() /app/vendor/yiisoft/yii2/base/Controller.php:384
+PHP message: PHP  11. yii\base\View->renderFile() /app/vendor/yiisoft/yii2/base/View.php:152
+PHP message: PHP  12. yii\base\View->renderPhpFile() /app/vendor/yiisoft/yii2/base/View.php:250
+PHP message: PHP  13. require() /app/vendor/yiisoft/yii2/base/View.php:332
+PHP message: PHP  14. spl_autoload_call() /app/views/site/index.php:13
+PHP message: PHP  15. yii\BaseYii::autoload() /app/views/site/index.php:13" while reading response header from upstream, client: 192.168.83.1, server: services.dev, request: "GET /favicon.ico HTTP/1.1", upstream: "fastcgi://unix:/var/run/php/php7.0-fpm.sock:", host: "services", referrer: "http://services/index.php?r=siteinfo%2Fview&id=592"
