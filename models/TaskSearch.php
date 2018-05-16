@@ -38,7 +38,7 @@ class TaskSearch extends Task {
      * @return ActiveDataProvider
      */
     public function search($params) {
-        $query = Task::find()->orderBy(['task_urgency' => 'DESC', 'task_order' => 'ASC']);
+        $query = Task::find()->orderBy(['task_urgency' => SORT_ASC, 'task_order' => SORT_ASC]);
         //$query = Task::find();
         // add conditions that should always apply here
 

@@ -16,9 +16,11 @@ use app\models\Urgency;
 
         <?php $form = ActiveForm::begin(); ?>
         <?php
-        echo $form->field($model, 'task_order')->hiddenInput([
-            'value' => (Task::find()->max('task_order')) + 1,
-        ])->label('')
+        if ($model->isNewRecord){
+            echo $form->field($model, 'task_order')->hiddenInput([
+                'value' => (Task::find()->max('task_order')) + 1,
+            ])->label('');
+        }
         ?>
         <?php $items = ArrayHelper::map(User::find()->orderBy(['fio' => 'ASC'])->all(), 'id', 'fio'); ?>
 
