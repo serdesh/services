@@ -139,23 +139,23 @@ if (User::isAdmin()) {
                             </div>
             
                         </div>-->
-            <div class="row">
-                <div class="col-sm-12 col-md-12 col-lg-12">
-                    <a href="/uploads/programm/SpravkiBKsetup_ver._2.4.1.msi">
-                        <h1>Скачать программное обеспечение "Справки БК" (версия 2.4.1)</h1>
-                    </a>
-                    <h1><small>Подготовка справок о доходах, расходах, об имуществе и обязательствах имущественного характера</small></h1>
-                    <hr> 
-                </div>
-            </div>      
-            <div class="row">
-                <div class="col-sm-6 col-md-6 col-lg-6">
-                    <a href="/uploads/programm/instr_BK.doc"><h3>Инструкция по работе с программным обеспечением "Справки БК"</h3></a>
-                </div>
-                <div class="col-sm-6 col-md-6 col-lg-6 helbtn">
-                    <?php require '_modal_install_spravkabk.php'; ?>
-                </div>
-            </div>
+<!--            <div class="row">-->
+<!--                <div class="col-sm-12 col-md-12 col-lg-12">-->
+<!--                    <a href="/uploads/programm/SpravkiBKsetup_ver._2.4.1.msi">-->
+<!--                        <h1>Скачать программное обеспечение "Справки БК" (версия 2.4.1)</h1>-->
+<!--                    </a>-->
+<!--                    <h1><small>Подготовка справок о доходах, расходах, об имуществе и обязательствах имущественного характера</small></h1>-->
+<!--                    <hr> -->
+<!--                </div>-->
+<!--            </div>      -->
+<!--            <div class="row">-->
+<!--                <div class="col-sm-6 col-md-6 col-lg-6">-->
+<!--                    <a href="/uploads/programm/instr_BK.doc"><h3>Инструкция по работе с программным обеспечением "Справки БК"</h3></a>-->
+<!--                </div>-->
+<!--                <div class="col-sm-6 col-md-6 col-lg-6 helbtn">-->
+<!--                    --><?php //require '_modal_install_spravkabk.php'; ?>
+<!--                </div>-->
+<!--            </div>-->
         </div>
     </div>
 </div>
