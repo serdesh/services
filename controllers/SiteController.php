@@ -2,8 +2,10 @@
 
 namespace app\controllers;
 
+use app\components\ImageHelper;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -14,14 +16,18 @@ use app\models\Fias;
 use app\models\Stat;
 use app\models\PasswordResetRequestForm;
 use app\models\ResetPasswordForm;
+use app\models\Test;
 use yii2mod\ftp;
+use yii\web\UploadedFile;
 
-class SiteController extends Controller {
+class SiteController extends Controller
+{
 
     /**
      * @inheritdoc
      */
-    public function behaviors() {
+    public function behaviors()
+    {
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -46,7 +52,8 @@ class SiteController extends Controller {
     /**
      * @inheritdoc
      */
-    public function actions() {
+    public function actions()
+    {
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction',
@@ -63,7 +70,8 @@ class SiteController extends Controller {
      *
      * @return string
      */
-    public function actionIndex() {
+    public function actionIndex()
+    {
         return $this->render('index');
     }
 
@@ -72,7 +80,8 @@ class SiteController extends Controller {
      *
      * @return Response|string
      */
-    public function actionLogin() {
+    public function actionLogin()
+    {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
@@ -82,7 +91,7 @@ class SiteController extends Controller {
             return $this->goBack();
         }
         return $this->render('login', [
-                    'model' => $model,
+            'model' => $model,
         ]);
     }
 
@@ -91,7 +100,8 @@ class SiteController extends Controller {
      *
      * @return Response
      */
-    public function actionLogout() {
+    public function actionLogout()
+    {
         Yii::$app->user->logout();
 
         return $this->goHome();
@@ -102,7 +112,8 @@ class SiteController extends Controller {
      *
      * @return Response|string
      */
-    public function actionContact() {
+    public function actionContact()
+    {
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
             Yii::$app->session->setFlash('contactFormSubmitted');
@@ -110,7 +121,7 @@ class SiteController extends Controller {
             return $this->refresh();
         }
         return $this->render('contact', [
-                    'model' => $model,
+            'model' => $model,
         ]);
     }
 
@@ -119,14 +130,16 @@ class SiteController extends Controller {
      *
      * @return string
      */
-    public function actionAbout() {
+    public function actionAbout()
+    {
         return $this->render('about');
     }
 
-    public function actionSignup() {
+    public function actionSignup()
+    {
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) { // Если есть, загружаем post данные в модель через родительский метод load класса Model
-           // $model->openpass = $model->password_repeat;
+            // $model->openpass = $model->password_repeat;
             if ($user = $model->signup()) { //Если регистрация
                 if (Yii::$app->getUser()->login($user)) { //Логиним пользователя, если регистрация успешна
                     return $this->goHome();
@@ -134,11 +147,15 @@ class SiteController extends Controller {
             }
         }
         return $this->render('signup', [//Просто рендерим вид, если один из if вернул false
-                    'model' => $model,
+            'model' => $model,
         ]);
     }
 
-    public function actionFias() {
+    /**
+     * @return string
+     */
+    public function actionFias()
+    {
         $model = new Fias();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             return $this->render('fias-confirm', ['model' => $model,]);
@@ -148,7 +165,8 @@ class SiteController extends Controller {
         //return $this->render('fias', ['model' => $model,]);
     }
 
-    public function actionStat() {
+    public function actionStat()
+    {
         $model = new Stat();
 //        if (Yii::$app->request->isPjax) {
 //            $answer = true;
@@ -158,7 +176,8 @@ class SiteController extends Controller {
         return $this->render('stat', ['model' => $model,]);
     }
 
-    public function actionStreetLists() {
+    public function actionStreetLists()
+    {
         $city_code = Yii::$app->request->post('citycode');
         $content = file_get_contents('http://basicdata.ru/api/json/fias/addrobj/' . $city_code . '/');
         $data = json_decode($content, true);
@@ -181,7 +200,8 @@ class SiteController extends Controller {
         }
     }
 
-    public function actionHouseLists() {
+    public function actionHouseLists()
+    {
         $street_code = Yii::$app->request->post('streetcode');
         $content = file_get_contents('http://basicdata.ru/api/json/fias/house/' . $street_code . '/');
         $data = json_decode($content, true);
@@ -202,6 +222,19 @@ class SiteController extends Controller {
         }
     }
 
-   
+    public function actionTest()
+    {
+        $model = new Test();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->files = UploadedFile::getInstances($model, 'files');
+            Test::compressImg($model->files);
+//            VarDumper::dump($model, 3, true);
+//            exit;
+
+        }
+        return $this->render('test', ['model' => $model]);
+
+    }
+
 
 }

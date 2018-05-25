@@ -121,11 +121,7 @@ class SiteinfoController extends Controller
         if ($model->save()) {
             if ($model->Files && $model->validate()) {
                 foreach ($model->Files as $file) {
-                    //$path = $path_attach . '/' . $file->baseName . '.' . $file->extension;
-                    //$path = $path_attach . '/' . iconv("UTF-8", "windows-1251",$file->baseName) . '.' . $file->extension;
-                    //$path = $path_attach . '/' . Inflector::transliterate(mb_strtolower($file->baseName)) . '.' . $file->extension; //отображает корректно руские названия файлов
                     $path = $path_attach . '/' . Yii::$app->transliter->translate($file->baseName) . '.' . $file->extension;
-
                     $file->saveAs($path);
                 }
             }
