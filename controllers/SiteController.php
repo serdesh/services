@@ -2,10 +2,8 @@
 
 namespace app\controllers;
 
-use app\components\ImageHelper;
 use Yii;
 use yii\filters\AccessControl;
-use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -14,10 +12,7 @@ use app\models\ContactForm;
 use app\models\SignupForm;
 use app\models\Fias;
 use app\models\Stat;
-use app\models\PasswordResetRequestForm;
-use app\models\ResetPasswordForm;
 use app\models\Test;
-use yii2mod\ftp;
 use yii\web\UploadedFile;
 
 class SiteController extends Controller
@@ -228,9 +223,6 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $model->files = UploadedFile::getInstances($model, 'files');
             Test::compressImg($model->files);
-//            VarDumper::dump($model, 3, true);
-//            exit;
-
         }
         return $this->render('test', ['model' => $model]);
 

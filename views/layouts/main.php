@@ -8,7 +8,6 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\User;
-use yii\helpers\Url;
 
 AppAsset::register($this);
 $this->registerLinkTag(['rel' => 'shortcut icon', 'type' => 'image/x-icon', 'href' => 'img/favshmr.ico']);
@@ -25,7 +24,7 @@ $this->registerLinkTag(['rel' => 'shortcut icon', 'type' => 'image/x-icon', 'hre
         <link href="fontawesome/css/font-awesome.min.css" rel="stylesheet">
         <?php $this->head() ?>
         <style media='print' type='text/css'>
-            #navbar-iframe {display: none; height: 0px; visibility: hidden;}
+            #navbar-iframe {display: none; height: 0; visibility: hidden;}
             .noprint {display: none;}
             body {background:#FFF; color:#000;}
             a {text-decoration: underline; color:#00F;}

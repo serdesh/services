@@ -4,13 +4,8 @@ namespace app\models;
 
 use Yii;
 
-//use app\models\User;
-//use app\models\Mapinfo;
-//use app\models\Division;
 use yii\helpers\Html;
-//use yii\helpers\VarDumper;
 use yii\helpers\FileHelper;
-use yii\helpers\VarDumper;
 use yii2mod\ftp\FtpClient;
 
 /**
@@ -61,7 +56,7 @@ class Siteinfo extends \yii\db\ActiveRecord
             [['si_data', 'si_end_public'], 'safe'],
             [['si_text', 'si_path_attach', 'selectedfile', 'desiredname'], 'string'],
             [['si_name_info'], 'string', 'max' => 500],
-            [['Files'], 'file', 'skipOnEmpty' => true, 'maxFiles' => 15, 'message' => 'Нельзя загрузить больше 15 файлов.'], //'extensions' => 'png, jpg, jpeg, gif, doc, docx, rtf, txt, xls, xlsx, 7zip, zip, odt, ods, pdf', 
+            [['Files'], 'file', 'skipOnEmpty' => true, 'maxFiles' => 15, 'message' => 'Нельзя загрузить больше 15 файлов.'], //'extensions' => 'png, jpg, jpeg, gif, doc, docx, rtf, txt, xls, xlsx, 7zip, zip, odt, ods, pdf',
             [['si_map_id'], 'required', 'message' => 'Необходимо выбрать раздел'],
         ];
     }
@@ -121,7 +116,7 @@ class Siteinfo extends \yii\db\ActiveRecord
 
     /**
      * Получаем ссылку на файл или список ссылок на файлы, в зависимости от передаваемого пути (путь к файлу или путь к папке)
-     * @param $path Путь к папке или к файлу
+     * @param $path
      * @return string
      */
     public static function getListFiles($path)
@@ -169,14 +164,15 @@ class Siteinfo extends \yii\db\ActiveRecord
         return $list;
     }
 
+
     /**
      * @param $dir
      */
-    public function removeDirectory($dir)
+    public static function removeDirectory($dir)
     {
         if ($objs = glob($dir . "/*")) {
             foreach ($objs as $obj) {
-                is_dir($obj) ? removeDirectory($obj) : unlink($obj);
+                is_dir($obj) ? self::removeDirectory($obj) : unlink($obj);
             }
         }
         if (is_dir($dir)) {
@@ -220,57 +216,4 @@ class Siteinfo extends \yii\db\ActiveRecord
         }
         return false;
     }
-
-    // Функция "cropImage" взята отсюда: https://codengineering.ru/post/32
-
-    /**
-     * @param string $aInitialImageFilePath - строка, представляющая путь к обрезаемому изображению
-     * @param string $aNewImageFilePath - строка, представляющая путь куда нахо сохранить выходное обрезанное изображение
-     * @param int $aNewImageWidth - ширина выходного обрезанного изображения
-     * @param int $aNewImageHeight - высота выходного обрезанного изображения
-     * @return bool
-     */
-    public static function resizeImg ($aInitialImageFilePath, $aNewImageFilePath, $aNewImageWidth, $aNewImageHeight) {
-        if (($aNewImageWidth < 0) || ($aNewImageHeight < 0)) {
-            return false;
-        }
-        // Массив с поддерживаемыми типами изображений
-        $lAllowedExtensions = array(1 => "gif", 2 => "jpeg", 3 => "png");
-
-        // Получаем размеры и тип изображения в виде числа
-        list($lInitialImageWidth, $lInitialImageHeight, $lImageExtensionId) = getimagesize($aInitialImageFilePath);
-
-        if (!array_key_exists($lImageExtensionId, $lAllowedExtensions)) {
-            return false;
-        }
-        $lImageExtension = $lAllowedExtensions[$lImageExtensionId];
-
-        // Получаем название функции, соответствующую типу, для создания изображения
-        $func = 'imagecreatefrom' . $lImageExtension;
-        // Создаём дескриптор исходного изображения
-        $lInitialImageDescriptor = $func($aInitialImageFilePath);
-        // Определяем отображаемую область
-        $lCroppedImageWidth = 0;
-        $lCroppedImageHeight = 0;
-        $lInitialImageCroppingX = 0;
-        $lInitialImageCroppingY = 0;
-        if ($aNewImageWidth / $aNewImageHeight > $lInitialImageWidth / $lInitialImageHeight) {
-            $lCroppedImageWidth = floor($lInitialImageWidth);
-            $lCroppedImageHeight = floor($lInitialImageWidth * $aNewImageHeight / $aNewImageWidth);
-            $lInitialImageCroppingY = floor(($lInitialImageHeight - $lCroppedImageHeight) / 2);
-        } else {
-            $lCroppedImageWidth = floor($lInitialImageHeight * $aNewImageWidth / $aNewImageHeight);
-            $lCroppedImageHeight = floor($lInitialImageHeight);
-            $lInitialImageCroppingX = floor(($lInitialImageWidth - $lCroppedImageWidth) / 2);
-        }
-
-        // Создаём дескриптор для выходного изображения
-        $lNewImageDescriptor = imagecreatetruecolor($aNewImageWidth, $aNewImageHeight);
-        imagecopyresampled($lNewImageDescriptor, $lInitialImageDescriptor, 0, 0, $lInitialImageCroppingX, $lInitialImageCroppingY, $aNewImageWidth, $aNewImageHeight, $lCroppedImageWidth, $lCroppedImageHeight);
-        $func = 'image' . $lImageExtension;
-
-        // сохраняем полученное изображение в указанный файл
-        return $func($lNewImageDescriptor, $aNewImageFilePath);
-    }
-
 }

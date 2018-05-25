@@ -4,7 +4,6 @@ namespace app\models;
 
 use yii\base\Model;
 use \app\components\ImgHelper;
-use yii\helpers\VarDumper;
 
 class Test extends Model
 {
@@ -16,12 +15,12 @@ class Test extends Model
      */
     public static function compressImg($sourcePath)
     {
-        foreach ($sourcePath as $key => $value){
-            $path = ImgHelper::resizeImg($value->tempName, true, 800, 800);
-            VarDumper::dump($path, 3, true);
-            exit;
+        foreach ($sourcePath as $key => $value) {
+            $file = pathinfo($value->name);
+            $savePathFile = 'uploads/temp/' . time() . '.' . $file['extension'];
+            return ImgHelper::resizeImage($value->tempName, $savePathFile, 800);
         }
-
+        return '';
     }
 }
 

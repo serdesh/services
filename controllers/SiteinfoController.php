@@ -5,16 +5,16 @@ namespace app\controllers;
 use Yii;
 use app\models\Siteinfo;
 use app\models\SiteinfoSearch;
-use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 use yii\filters\VerbFilter;
-use yii\helpers\Inflector;
+//use yii\helpers\Inflector;
 use app\models\Mapinfo;
 use app\models\User;
-use app\models\Ftpaccounts;
+//use app\models\Ftpaccounts;
 use ZipArchive;
+use \app\components\ImgHelper;
 
 
 /**
@@ -59,17 +59,18 @@ class SiteinfoController extends Controller
         ]);
     }
 
+
     /**
-     * Displays a single Siteinfo model.
-     * @param string $id
-     * @return mixed
+     * @param $id
+     * @return string
      * @throws NotFoundHttpException
+     * @throws \yii2mod\ftp\FtpException
      */
     public function actionView($id)
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()){
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             return $this->render('view', [
                 'model' => $model,
                 'result' => Siteinfo::sendFtp($model)
@@ -82,6 +83,7 @@ class SiteinfoController extends Controller
 
         ]);
     }
+
 
     /**
      * Creates a new Siteinfo model.
@@ -121,8 +123,14 @@ class SiteinfoController extends Controller
         if ($model->save()) {
             if ($model->Files && $model->validate()) {
                 foreach ($model->Files as $file) {
-                    $path = $path_attach . '/' . Yii::$app->transliter->translate($file->baseName) . '.' . $file->extension;
-                    $file->saveAs($path);
+                    $tmpFile = $file ->tempName;
+                    if (getimagesize($tmpFile)) {
+                        $path = $path_attach . '/' . time() . '.' . $file->extension;
+                        ImgHelper::resizeImage($tmpFile, $path , 800);
+                    } else {
+                        $path = $path_attach . '/' . Yii::$app->transliter->translate($file->baseName) . '.' . $file->extension;
+                        $file->saveAs($path);
+                    }
                 }
             }
             //return $this->redirect(['view', 'id' => $model->si_id]);
@@ -146,7 +154,6 @@ class SiteinfoController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //return $this->redirect(['view', 'id' => $model->si_id]);
             return $this->redirect(['index']);
         } else {
             if ($model->si_end_public) {
@@ -177,6 +184,7 @@ class SiteinfoController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionDelete($id)
     {
@@ -184,7 +192,7 @@ class SiteinfoController extends Controller
         if (User::isAdmin() or Yii::$app->user->identity->id == Siteinfo::findOne(['si_id' => $id])->si_user_id) { //Еслиадмин или автор материала
             //Удаляем папку
             $dir = Siteinfo::findOne(['si_id' => $this->findModel($id)->si_id])->si_path_attach;
-            $this->removeDirectory($dir);
+            Siteinfo::removeDirectory($dir);
             $this->findModel($id)->delete();
             return $this->redirect(['index']);
         } else {
