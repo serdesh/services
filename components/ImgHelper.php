@@ -8,13 +8,13 @@ use yii\helpers\VarDumper;
 class ImgHelper
 {
     /**
-     * @param string $pathfile
-     * @param bool $save
-     * @param int $width
-     * @param int $height
+     * @param string $pathfile Путь к картинке
+     * @param bool $save Записывать или нет
+     * @param int $width Желаемая ширина
+     * @param int $height Желаемая высота
      * @return bool
      */
-    public static function resizeImg($pathfile, $save, $width, $height)
+    public static function resizeImg($pathfile, bool $save, int $width, int $height = 0)
     {
         $info = getimagesize($pathfile); //Инфа о картинке
         $size = [$info[0], $info[1]];
