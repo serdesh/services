@@ -46,7 +46,16 @@ class SiteinfoController extends Controller
     public function actionIndex()
     {
         $searchModel = new SiteinfoSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        if (User::isAdmin()) {
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        } else {
+            $dataProvider = new ActiveDataProvider([
+                'query' => Siteinfo::find()->where(['=', 'si_user_id', app()->user->id]),
+            ]);
+            $dataProvider->sort->defaultOrder = ['si_data' => SORT_DESC];
+        }
+
+
         if (Yii::$app->user->isGuest) {
             echo '<script> alert("Для работы с сервисами авторизируйтесь или пройдите процедуру регистрации!")</script>';
             return $this->render('/site/index', [
@@ -217,6 +226,12 @@ class SiteinfoController extends Controller
         }
     }
 
+    /**
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
+     * @throws \yii2mod\ftp\FtpException
+     */
     public function actionFiles($id)
     {
         $model = $this->findModel($id);
