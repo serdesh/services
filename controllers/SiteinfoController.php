@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Siteinfo;
 use app\models\SiteinfoSearch;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
@@ -123,10 +124,10 @@ class SiteinfoController extends Controller
         if ($model->save()) {
             if ($model->Files && $model->validate()) {
                 foreach ($model->Files as $file) {
-                    $tmpFile = $file ->tempName;
+                    $tmpFile = $file->tempName;
                     if (getimagesize($tmpFile)) {
                         $path = $path_attach . '/' . time() . '.' . $file->extension;
-                        ImgHelper::resizeImage($tmpFile, $path , 800);
+                        ImgHelper::resizeImage($tmpFile, $path, 800);
                     } else {
                         $path = $path_attach . '/' . Yii::$app->transliter->translate($file->baseName) . '.' . $file->extension;
                         $file->saveAs($path);
@@ -224,7 +225,14 @@ class SiteinfoController extends Controller
 //            return $this->render('files', ['model' => $this->findModel($id), 'result' => $this->sendFtp($model)]);
             return $this->render('files', ['model' => $model, 'result' => Siteinfo::sendFtp($model)]);
         } else {
-            return $this->render('files', ['model' => $model]);
+            $query = new Query();
+            $provider = new ActiveDataProvider([
+                'query' => $query->find('post'),
+                'pagination' => [
+                    'pageSize' => 20,
+                ],
+            ]);
+            return $this->render('files', ['model' => $model, 'dataProvider' => $provider]);
         }
     }
 
