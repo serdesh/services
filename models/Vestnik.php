@@ -56,7 +56,7 @@ class Vestnik extends \yii\db\ActiveRecord {
     }
 
     public static function zipfile($sourceFile, $destfile, $filename) {
-        $zip = new \ZipArchive();
+        $zip = new ZipArchive();
         if (!$zip->open($destfile, ZIPARCHIVE::CREATE)) {
             exit("Не могу открыть " . $destfile . '<br>');
         }
@@ -65,7 +65,7 @@ class Vestnik extends \yii\db\ActiveRecord {
         unset($zip);
     }
 
-    public function set_newpath($model) {
+    public static function set_newpath($model) {
         $old_path = $model->vest_pathfile;
         $filename = substr($old_path, strrpos($old_path, '/') + 1);
         $dir_path = substr($old_path, 0, strrpos($old_path, '/') + 1);

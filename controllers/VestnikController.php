@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Vestnik;
 use app\models\VestnikSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -20,6 +21,15 @@ class VestnikController extends Controller {
      */
     public function behaviors() {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -47,6 +57,7 @@ class VestnikController extends Controller {
      * Displays a single Vestnik model.
      * @param string $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionView($id) {
         return $this->render('view', [
@@ -70,26 +81,24 @@ class VestnikController extends Controller {
             }
 
             $model->file = \yii\web\UploadedFile::getInstance($model, 'file');
-            $path_dest_dir = 'uploads/documents/vestnik';
-            if (!is_dir($path_dest_dir)) {
-                mkdir($path_dest_dir, 0777, TRUE);
+            $pathDestinationDirectory = 'uploads/documents/vestnik';
+            if (!is_dir($pathDestinationDirectory)) {
+                mkdir($pathDestinationDirectory, 0777, TRUE);
             }
-            $model->vest_pathfile = $path_dest_dir . '/Vestnik' . $model->vest_fullnumber . '_' . date('Y', strtotime($model->vest_data)) . '.zip';
+            $model->vest_pathfile = $pathDestinationDirectory . '/Vestnik' . $model->vest_fullnumber . '_' . date('Y', strtotime($model->vest_data)) . '.zip';
 
             if (!$model->file) {
-                $model->addError($attribute, 'Необходимо прикрепить файл с вестником.');
+                $model->addError('warning', 'Необходимо прикрепить файл с вестником.');
                 return $this->render('create', [
                             'model' => $model,]);
             }
         }
-        // \yii\helpers\VarDumper::dump($model->file);
 
         if ($model->save()) {
             if ($model->file && $model->validate()) {
-                $path = $path_dest_dir . '/Vestnik' . $model->vest_fullnumber . '_' . $model->vest_data . '.' . $model->file->extension; //отображает корректно руские названия файлов
+                $path = $pathDestinationDirectory . '/Vestnik' . $model->vest_fullnumber . '_' . $model->vest_data . '.' . $model->file->extension; //отображает корректно руские названия файлов
                 Vestnik::zipfile($model->file, $model->vest_pathfile, Inflector::transliterate(mb_strtolower($model->file->baseName)) . '.' . $model->file->extension);
-//                \yii\helpers\VarDumper::dump($path);
-//                $model->file->saveAs($path);
+                $model->file->saveAs($path);
             }
             return $this->redirect(['view', 'id' => $model->vest_id]);
         } else {
@@ -104,6 +113,7 @@ class VestnikController extends Controller {
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionUpdate($id) {
         $model = $this->findModel($id);
@@ -119,11 +129,14 @@ class VestnikController extends Controller {
         }
     }
 
+
     /**
-     * Deletes an existing Vestnik model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param string $id
-     * @return mixed
+     * @param $id
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id) {
 

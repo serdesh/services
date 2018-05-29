@@ -10,12 +10,11 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 use yii\filters\VerbFilter;
-//use yii\helpers\Inflector;
 use app\models\Mapinfo;
 use app\models\User;
-//use app\models\Ftpaccounts;
 use ZipArchive;
 use \app\components\ImgHelper;
+use yii\filters\AccessControl;
 
 
 /**
@@ -30,6 +29,15 @@ class SiteinfoController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

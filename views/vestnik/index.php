@@ -10,7 +10,7 @@ use yii\widgets\Pjax;
 $this->title = 'Вестник Шарьинского района';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="vestnik-index">
+<div class="container vestnik-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>

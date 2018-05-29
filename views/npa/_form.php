@@ -44,7 +44,7 @@ use app\models\Npatype;
     </div>
     <div class="row">
         <div class="col-md-12">
-            <?php $items = ArrayHelper::map(User::find()->andWhere(['role' => '3'])->orWhere(['role' => '4'])->all(), 'id', 'fio'); ?>
+            <?php $items = ArrayHelper::map(User::find()->where(['in', 'role', [User::ROLE_BOSS, User::ROLE_BOSS_ASSISTANT, User::ROLE_HEAD_DIVISION]])->all(), 'id', 'fio'); ?>
             <?= $form->field($model, 'npa_sign_user_id')->dropDownList($items) ?>
         </div>
     </div>

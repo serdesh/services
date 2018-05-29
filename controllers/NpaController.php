@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Npa;
 use app\models\NpaSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -13,16 +14,28 @@ use yii\helpers\Inflector;
 use app\models\User;
 use yii\web\ForbiddenHttpException;
 
+
 /**
  * NpaController implements the CRUD actions for Npa model.
  */
-class NpaController extends Controller {
+class NpaController extends Controller
+{
 
     /**
      * @inheritdoc
      */
-    public function behaviors() {
+    public function behaviors()
+    {
         return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -36,13 +49,14 @@ class NpaController extends Controller {
      * Lists all Npa models.
      * @return mixed
      */
-    public function actionIndex() {
+    public function actionIndex()
+    {
         $searchModel = new NpaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -51,9 +65,10 @@ class NpaController extends Controller {
      * @param string $id
      * @return mixed
      */
-    public function actionView($id) {
+    public function actionView($id)
+    {
         return $this->render('view', [
-                    'model' => $this->findModel($id),
+            'model' => $this->findModel($id),
         ]);
     }
 
@@ -62,7 +77,8 @@ class NpaController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate() {
+    public function actionCreate()
+    {
         $model = new Npa();
         if ($model->load(Yii::$app->request->post())) {
 
@@ -98,12 +114,13 @@ class NpaController extends Controller {
      * @param string $id
      * @return mixed
      */
-    public function actionUpdate($id) {
+    public function actionUpdate($id)
+    {
         $model = $this->findModel($id);
         if ($model->load(Yii::$app->request->post())) {
 
             $old_file = $model->npa_path;
-            
+
             $model->npa_fullnumber = $this->get_npa_fullnumber($model);
 
             $model->file = UploadedFile::getInstance($model, 'file');
@@ -121,7 +138,7 @@ class NpaController extends Controller {
                 return $this->render('create', ['model' => $model]);
             }
             if ($model->file && $model->validate()) {
-                if (file_exists($old_file)){
+                if (file_exists($old_file)) {
                     unlink($old_file);
                 }
                 //$path = $path_dest_dir . '/' . Npa::get_trans_typename($model) . Inflector::transliterate(mb_strtolower($model->npa_fullnumber)) . '_' . date('d.m.y', $model->npa_date_adoption) . '.' . $model->file->extension; //отображает корректно руские названия файлов
@@ -147,7 +164,8 @@ class NpaController extends Controller {
      * @param string $id
      * @return mixed
      */
-    public function actionDelete($id) {
+    public function actionDelete($id)
+    {
         if (Npa::isAutor($this->findModel($id)) or User::isAdmin()) {
 
             $target_file = Npa::findOne(['npa_id' => $id])->npa_path;
@@ -163,7 +181,8 @@ class NpaController extends Controller {
         return $this->redirect(['index']);
     }
 
-    public function actionFiles($id) {
+    public function actionFiles($id)
+    {
         $model = $this->findModel($id);
         return $this->render('files', ['model' => $this->findModel($id)]);
     }
@@ -175,7 +194,8 @@ class NpaController extends Controller {
      * @return Npa the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id) {
+    protected function findModel($id)
+    {
         if (($model = Npa::findOne($id)) !== null) {
             return $model;
         } else {
@@ -183,7 +203,8 @@ class NpaController extends Controller {
         }
     }
 
-    public function get_npa_fullnumber($model) {
+    public function get_npa_fullnumber($model)
+    {
         if ($model->npa_literanumber) {
             return $model->npa_number . '-' . $model->npa_literanumber;
         } else {
@@ -191,7 +212,8 @@ class NpaController extends Controller {
         }
     }
 
-    public function set_path_dest_dir($path_dest_dir) {
+    public function set_path_dest_dir($path_dest_dir)
+    {
         if (!$path_dest_dir) {
             mkdir($path_dest_dir, 0777, true);
         }
