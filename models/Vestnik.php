@@ -4,7 +4,7 @@ namespace app\models;
 
 use Yii;
 use ZipArchive;
-use app\models\Siteinfo;
+//use app\models\Siteinfo;
 
 /**
  * This is the model class for table "{{%vestnik}}".
@@ -55,7 +55,7 @@ class Vestnik extends \yii\db\ActiveRecord {
         ];
     }
 
-    public static function zipfile($sourceFile, $destfile, $filename) {
+    public static function zipFile($sourceFile, $destfile, $filename) {
         $zip = new ZipArchive();
         if (!$zip->open($destfile, ZIPARCHIVE::CREATE)) {
             exit("Не могу открыть " . $destfile . '<br>');
@@ -67,7 +67,7 @@ class Vestnik extends \yii\db\ActiveRecord {
 
     public static function set_newpath($model) {
         $old_path = $model->vest_pathfile;
-        $filename = substr($old_path, strrpos($old_path, '/') + 1);
+//        $filename = substr($old_path, strrpos($old_path, '/') + 1);
         $dir_path = substr($old_path, 0, strrpos($old_path, '/') + 1);
         $newpath = $dir_path . 'Vestnik' . $model->vest_fullnumber . '_' . date('Y', strtotime($model->vest_data)) . '.zip';
         if ($old_path && $newpath) {
@@ -85,8 +85,8 @@ class Vestnik extends \yii\db\ActiveRecord {
                 $this->vest_fullnumber = $this->vest_number;
             }
             $model = new Siteinfo();
-            $model->si_user_id = Yii::$app->user->identity->id;
-            $model->si_division_id = Yii::$app->user->identity->division_id;
+            $model->si_user_id = Yii::$app->user->id;
+            $model->si_division_id = Yii::$app->user->division_id;
             $model->si_data = date('Y-m-d H:i');
             $model->si_name_info = 'Вестник Шарьинского района №' . $this->vest_fullnumber . ' от ' . date('d.m.Yг.', strtotime($this->vest_data));
             $model->si_map_id = '16';

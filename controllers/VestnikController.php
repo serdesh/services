@@ -72,6 +72,7 @@ class VestnikController extends Controller {
      */
     public function actionCreate() {
         $model = new Vestnik();
+        $pathDestinationDirectory = 'uploads/documents/vestnik';
 
         if ($model->load(Yii::$app->request->post())) {
             if ($model->vest_numberlitera) {
@@ -80,8 +81,7 @@ class VestnikController extends Controller {
                 $model->vest_fullnumber = $model->vest_number;
             }
 
-            $model->file = \yii\web\UploadedFile::getInstance($model, 'file');
-            $pathDestinationDirectory = 'uploads/documents/vestnik';
+            $model->file = yii\web\UploadedFile::getInstance($model, 'file');
             if (!is_dir($pathDestinationDirectory)) {
                 mkdir($pathDestinationDirectory, 0777, TRUE);
             }
@@ -97,7 +97,7 @@ class VestnikController extends Controller {
         if ($model->save()) {
             if ($model->file && $model->validate()) {
                 $path = $pathDestinationDirectory . '/Vestnik' . $model->vest_fullnumber . '_' . $model->vest_data . '.' . $model->file->extension; //отображает корректно руские названия файлов
-                Vestnik::zipfile($model->file, $model->vest_pathfile, Inflector::transliterate(mb_strtolower($model->file->baseName)) . '.' . $model->file->extension);
+                Vestnik::zipFile($model->file, $model->vest_pathfile, Inflector::transliterate(mb_strtolower($model->file->baseName)) . '.' . $model->file->extension);
                 $model->file->saveAs($path);
             }
             return $this->redirect(['view', 'id' => $model->vest_id]);
@@ -117,7 +117,6 @@ class VestnikController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->findModel($id);
-        //$model->load(Yii::$app->request->post());
         $model->vest_pathfile = Vestnik::set_newpath($model);//какая-то ебанина, переименовывает файл при втором заходе в редактирование
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->vest_id]);
@@ -162,10 +161,15 @@ class VestnikController extends Controller {
             throw new NotFoundHttpException('Запрашиваемая страница не существует.');
         }
     }
-    
-     public function actionFiles($id) {
+
+    /**
+     * @param $id
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionFiles($id) {
         $model = $this->findModel($id);
-        return $this->render('files', ['model' => $this->findModel($id)]);
+        return $this->render('files', ['model' => $model]);
     }
     
     
