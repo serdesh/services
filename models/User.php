@@ -108,7 +108,7 @@ class User extends ActiveRecord implements IdentityInterface {
      */
     public static function isAdmin() {
         if (!Yii::$app->user->isGuest) {
-            $loggedusername = Yii::$app->user->identity->username;
+            $loggedusername = \Yii::$app->user->identity->username;
             if (static::findOne(['username' => $loggedusername, 'role' => 1])) {
                 return TRUE;
             } else {

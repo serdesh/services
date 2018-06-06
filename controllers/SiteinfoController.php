@@ -114,10 +114,6 @@ class SiteinfoController extends Controller
         $attribute = "";
         if ($model->load(Yii::$app->request->post())) {
             $model->Files = UploadedFile::getInstances($model, 'Files');
-            $path_attach = 'uploads/siteinfo/' . Yii::$app->user->identity->division_id . '/' . date('d.m.Y') . '/' . date('His');
-            if (mkdir($path_attach, 0777, TRUE)) {
-                $model->si_path_attach = $path_attach;
-            }
 
             if (!User::isAdmin()) {
                 $model->si_division_id = Yii::$app->user->identity->division_id;
@@ -140,16 +136,24 @@ class SiteinfoController extends Controller
 
         if ($model->save()) {
             if ($model->Files && $model->validate()) {
-                foreach ($model->Files as $file) {
-                    $tmpFile = $file->tempName;
-                    if (getimagesize($tmpFile)) {
-                        $path = $path_attach . '/' . time() . '.' . $file->extension;
-                        ImgHelper::resizeImage($tmpFile, $path, 800);
-                    } else {
-                        $path = $path_attach . '/' . Yii::$app->transliter->translate($file->baseName) . '.' . $file->extension;
-                        $file->saveAs($path);
+                $path_attach = 'uploads/siteinfo/' . Yii::$app->user->identity->division_id . '/' . date('d.m.Y') . '/' . date('His');
+                if (mkdir($path_attach, 0777, TRUE)) {
+                    $model->si_path_attach = $path_attach;
+                    foreach ($model->Files as $file) {
+                        $tmpFile = $file->tempName;
+                        if (getimagesize($tmpFile)) {
+                            //Еслии картинка - сжимаем
+                            $path = $path_attach . '/' . time() . '.' . $file->extension;
+                            ImgHelper::resizeImage($tmpFile, $path, 800);
+                        } else {
+                            //Если не картинка - обрезаем длинное название и сохраняем
+                            $file->baseName = substr($file->baseName, 0,20);
+                            $path = $path_attach . '/' . Yii::$app->transliter->translate($file->baseName) . '.' . $file->extension;
+                            $file->saveAs($path);
+                        }
                     }
                 }
+
             }
             //return $this->redirect(['view', 'id' => $model->si_id]);
             return $this->redirect(['index']);

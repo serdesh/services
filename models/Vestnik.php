@@ -3,8 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 use ZipArchive;
-//use app\models\Siteinfo;
 
 /**
  * This is the model class for table "{{%vestnik}}".
@@ -15,21 +15,24 @@ use ZipArchive;
  * @property string $vest_pathfile
  * @property string $vest_data
  */
-class Vestnik extends \yii\db\ActiveRecord {
+class Vestnik extends ActiveRecord
+{
 
     public $file;
 
     /**
      * @inheritdoc
      */
-    public static function tableName() {
+    public static function tableName()
+    {
         return '{{%vestnik}}';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules() {
+    public function rules()
+    {
         return [
             [['vest_number', 'vest_stat'], 'integer'],
             [['vest_pathfile'], 'required'],
@@ -43,7 +46,8 @@ class Vestnik extends \yii\db\ActiveRecord {
     /**
      * @inheritdoc
      */
-    public function attributeLabels() {
+    public function attributeLabels()
+    {
         return [
             'vest_id' => 'Код',
             'vest_number' => 'Номер',
@@ -55,7 +59,13 @@ class Vestnik extends \yii\db\ActiveRecord {
         ];
     }
 
-    public static function zipFile($sourceFile, $destfile, $filename) {
+    /**
+     * @param $sourceFile
+     * @param $destfile
+     * @param $filename
+     */
+    public static function zipFile($sourceFile, $destfile, $filename)
+    {
         $zip = new ZipArchive();
         if (!$zip->open($destfile, ZIPARCHIVE::CREATE)) {
             exit("Не могу открыть " . $destfile . '<br>');
@@ -65,7 +75,12 @@ class Vestnik extends \yii\db\ActiveRecord {
         unset($zip);
     }
 
-    public static function set_newpath($model) {
+    /**
+     * @param $model
+     * @return string
+     */
+    public static function setNewPath($model)
+    {
         $old_path = $model->vest_pathfile;
 //        $filename = substr($old_path, strrpos($old_path, '/') + 1);
         $dir_path = substr($old_path, 0, strrpos($old_path, '/') + 1);
@@ -77,25 +92,32 @@ class Vestnik extends \yii\db\ActiveRecord {
         return $newpath;
     }
 
-    public function beforeSave($insert) {
-        if (parent::beforeSave($insert)) {
-            if ($this->vest_numberlitera) {
-                $this->vest_fullnumber = $this->vest_number . '-' . $this->vest_numberlitera;
-            } else {
-                $this->vest_fullnumber = $this->vest_number;
-            }
-            $model = new Siteinfo();
-            $model->si_user_id = Yii::$app->user->id;
-            $model->si_division_id = Yii::$app->user->division_id;
-            $model->si_data = date('Y-m-d H:i');
-            $model->si_name_info = 'Вестник Шарьинского района №' . $this->vest_fullnumber . ' от ' . date('d.m.Yг.', strtotime($this->vest_data));
-            $model->si_map_id = '16';
-            $model->si_end_public = $model->si_data;
-            $model->si_path_attach = $this->vest_pathfile;
-            $model->save();
-            return true;
+    /**
+     * @param $insert
+     * @return bool
+     */
+    public function beforeSave($insert)
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
         }
-        return false;
+
+        if ($this->vest_numberlitera) {
+            $this->vest_fullnumber = $this->vest_number . '-' . $this->vest_numberlitera;
+        } else {
+            $this->vest_fullnumber = $this->vest_number;
+        }
+        $model = new Siteinfo();
+
+        $model->si_user_id = app()->user->id;
+        $model->si_division_id = app()->user->identity->division_id;
+        $model->si_data = date('Y-m-d H:i');
+        $model->si_name_info = 'Вестник Шарьинского района №' . $this->vest_fullnumber . ' от ' . date('d.m.Yг.', strtotime($this->vest_data));
+        $model->si_map_id = '16';
+        $model->si_end_public = $model->si_data;
+        $model->si_path_attach = $this->vest_pathfile;
+        $model->save();
+        return true;
     }
 
 }

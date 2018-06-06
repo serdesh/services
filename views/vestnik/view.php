@@ -10,7 +10,7 @@ $this->title = 'Вестник №' . $model->vest_fullnumber . ' от ' . date(
 $this->params['breadcrumbs'][] = ['label' => 'Вестники', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="vestnik-view">
+<div class="container vestnik-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

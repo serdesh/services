@@ -10,6 +10,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\Inflector;
+use yii\web\UploadedFile;
 
 /**
  * VestnikController implements the CRUD actions for Vestnik model.
@@ -81,7 +82,7 @@ class VestnikController extends Controller {
                 $model->vest_fullnumber = $model->vest_number;
             }
 
-            $model->file = yii\web\UploadedFile::getInstance($model, 'file');
+            $model->file = UploadedFile::getInstance($model, 'file');
             if (!is_dir($pathDestinationDirectory)) {
                 mkdir($pathDestinationDirectory, 0777, TRUE);
             }
@@ -117,7 +118,7 @@ class VestnikController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->findModel($id);
-        $model->vest_pathfile = Vestnik::set_newpath($model);//какая-то ебанина, переименовывает файл при втором заходе в редактирование
+        $model->vest_pathfile = Vestnik::setNewPath($model);//какая-то ебанина, переименовывает файл при втором заходе в редактирование
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->vest_id]);
             

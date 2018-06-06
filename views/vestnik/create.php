@@ -10,7 +10,7 @@ $this->title = 'Добавить Вестник';
 $this->params['breadcrumbs'][] = ['label' => 'Вестник Шарьинского района', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="vestnik-create">
+<div class="container vestnik-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
