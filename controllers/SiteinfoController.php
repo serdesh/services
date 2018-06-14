@@ -211,16 +211,16 @@ class SiteinfoController extends Controller
      */
     public function actionDelete($id)
     {
-        //Проверяем права на удаление 
+        //Проверяем права на удаление
         if (User::isAdmin() or Siteinfo::isAuthor($id)) { //Если админ или автор материала
             //Удаляем папку
             $dir = Siteinfo::findOne(['si_id' => $this->findModel($id)->si_id])->si_path_attach;
             if ($dir){
                 Siteinfo::removeDirectory($dir);
-                $this->findModel($id)->delete();
             } else {
                 app()->session->setFlash('eroor', 'Не верный путь.' . $dir);
             }
+            $this->findModel($id)->delete();
             return $this->redirect(['index']);
         } else {
             return \yii\web\HttpException('У вас нет доступа к операции удаления');
