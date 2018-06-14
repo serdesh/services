@@ -147,8 +147,8 @@ class SiteinfoController extends Controller
                             ImgHelper::resizeImage($tmpFile, $path, 800);
                         } else {
                             //Если не картинка - обрезаем длинное название и сохраняем
-                            $file->baseName = substr($file->baseName, 0,20);
-                            $path = $path_attach . '/' . Yii::$app->transliter->translate($file->baseName) . '.' . $file->extension;
+                            $fileName = substr($file->baseName, 0,20);
+                            $path = $path_attach . '/' . Yii::$app->transliter->translate($fileName) . '.' . $file->extension;
                             $file->saveAs($path);
                         }
                     }
