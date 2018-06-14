@@ -77,7 +77,6 @@ class SiteinfoController extends Controller
         ]);
     }
 
-
     /**
      * @param $id
      * @return string
@@ -101,7 +100,6 @@ class SiteinfoController extends Controller
 
         ]);
     }
-
 
     /**
      * Creates a new Siteinfo model.
@@ -151,7 +149,6 @@ class SiteinfoController extends Controller
                             $path = $path_attach . '/' . Yii::$app->transliter->translate($fileName) . '.' . $file->extension;
                             $file->saveAs($path);
                         }
-
                     }
                 }
 
@@ -208,15 +205,22 @@ class SiteinfoController extends Controller
      * @param string $id
      * @return mixed
      * @throws NotFoundHttpException
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
         //Проверяем права на удаление 
-        if (User::isAdmin() or Yii::$app->user->identity->id == Siteinfo::findOne(['si_id' => $id])->si_user_id) { //Еслиадмин или автор материала
+        if (User::isAdmin() or Siteinfo::isAuthor($id)) { //Если админ или автор материала
             //Удаляем папку
             $dir = Siteinfo::findOne(['si_id' => $this->findModel($id)->si_id])->si_path_attach;
-            Siteinfo::removeDirectory($dir);
-            $this->findModel($id)->delete();
+            if ($dir){
+                Siteinfo::removeDirectory($dir);
+                $this->findModel($id)->delete();
+            } else {
+                app()->session->setFlash('eroor', 'Не верный путь.' . $dir);
+            }
             return $this->redirect(['index']);
         } else {
             return \yii\web\HttpException('У вас нет доступа к операции удаления');
