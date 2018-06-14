@@ -151,6 +151,7 @@ class SiteinfoController extends Controller
                             $path = $path_attach . '/' . Yii::$app->transliter->translate($fileName) . '.' . $file->extension;
                             $file->saveAs($path);
                         }
+
                     }
                 }
 
