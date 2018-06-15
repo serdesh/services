@@ -172,7 +172,6 @@ class Siteinfo extends \yii\db\ActiveRecord
     {
         if ($objs = glob($dir . "/*")) {
             foreach ($objs as $obj) {
-                _end($obj);
                 is_dir($obj) ? self::removeDirectory($obj) : unlink($obj);
             }
         }

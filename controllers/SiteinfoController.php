@@ -131,12 +131,12 @@ class SiteinfoController extends Controller
                     'model' => $model,]);
             }
         }
+        $path_attach = 'uploads/siteinfo/' . Yii::$app->user->identity->division_id . '/' . date('d.m.Y') . '/' . date('His');
+        $model->si_path_attach = $path_attach;
 
         if ($model->save()) {
             if ($model->Files && $model->validate()) {
-                $path_attach = 'uploads/siteinfo/' . Yii::$app->user->identity->division_id . '/' . date('d.m.Y') . '/' . date('His');
                 if (mkdir($path_attach, 0777, TRUE)) {
-                    $model->si_path_attach = $path_attach;
                     foreach ($model->Files as $file) {
                         $tmpFile = $file->tempName;
                         if (getimagesize($tmpFile)) {
