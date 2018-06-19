@@ -112,9 +112,8 @@ class SiteinfoController extends Controller
         $attribute = "";
         if ($model->load(Yii::$app->request->post())) {
             $model->Files = UploadedFile::getInstances($model, 'Files');
-
             if (!User::isAdmin()) {
-                $model->si_division_id = Yii::$app->user->identity->division_id;
+                $model->si_division_id = app()->user->identity->division_id;
             }
 
             if (!$model->si_text && !$model->Files) {
@@ -145,8 +144,10 @@ class SiteinfoController extends Controller
                             ImgHelper::resizeImage($tmpFile, $path, 800);
                         } else {
                             //Если не картинка - обрезаем длинное название и сохраняем
-                            $fileName = substr($file->baseName, 0,20);
-                            $path = $path_attach . '/' . Yii::$app->transliter->translate($fileName) . '.' . $file->extension;
+                            $fileName = substr(app()->transliter->translate($file->baseName), 0, 70);
+//                            $fileName = app()->transliter->translate($file->baseName);
+//                            $fileName = time();
+                            $path = $path_attach . '/' . $fileName . '.' . $file->extension;
                             $file->saveAs($path);
                         }
                     }
