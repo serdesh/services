@@ -132,22 +132,23 @@ class SiteinfoController extends Controller
         }
         $path_attach = 'uploads/siteinfo/' . Yii::$app->user->identity->division_id . '/' . date('d.m.Y') . '/' . date('His');
         $model->si_path_attach = $path_attach;
-
+        $counter = 0;
         if ($model->save()) {
             if ($model->Files && $model->validate()) {
                 if (mkdir($path_attach, 0777, TRUE)) {
                     foreach ($model->Files as $file) {
+                        $counter += 1;
                         $tmpFile = $file->tempName;
                         if (getimagesize($tmpFile)) {
                             //Еслии картинка - сжимаем
-                            $path = $path_attach . '/' . time() . '.' . $file->extension;
+                            $path = $path_attach . '/' . time() . $counter .'.' . $file->extension;
                             ImgHelper::resizeImage($tmpFile, $path, 800);
                         } else {
                             //Если не картинка - обрезаем длинное название и сохраняем
                             $fileName = substr(app()->transliter->translate($file->baseName), 0, 70);
 //                            $fileName = app()->transliter->translate($file->baseName);
 //                            $fileName = time();
-                            $path = $path_attach . '/' . $fileName . '.' . $file->extension;
+                            $path = $path_attach . '/' . $fileName . $counter.  '.' . $file->extension;
                             $file->saveAs($path);
                         }
                     }
