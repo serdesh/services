@@ -6,6 +6,7 @@ use yii\helpers\Url;
 use app\models\User;
 use app\models\Siteinfo;
 use app\models\Birthday;
+use yii\grid\GridView;
 
 $this->title = 'Сервисы администрации ШМР';
 
@@ -30,11 +31,14 @@ if (User::isAdmin()) {
                             <div class="pull-left">
                                 <a href="<?= Url::to(['/siteinfo/index']) ?>"><?= Html::img('/img/info512.png', ['alt' => 'Инфо для сайта', 'width' => 40]) ?></a>
                             </div>
-                            <a href="<?= Url::to(['/siteinfo/index']) ?>"><h4>Информация для сайта <?= $countInfo; ?></h4></a>
+                            <a href="<?= Url::to(['/siteinfo/index']) ?>"><h4>Информация для
+                                    сайта <?= $countInfo; ?></h4></a>
                         </div>
                         <div class="panel-body text-center">
-                            <p>Инструмент отправки информации для последующего размещения на сайте администрации Шарьинского района.</p>
-                            <a href="<?= Url::to(['/site/stat']) ?>"><span class="glyphicon glyphicon-stats"></span> Статистика отправки информации</a>
+                            <p>Инструмент отправки информации для последующего размещения на сайте администрации
+                                Шарьинского района.</p>
+                            <a href="<?= Url::to(['/site/stat']) ?>"><span class="glyphicon glyphicon-stats"></span>
+                                Статистика отправки информации</a>
                         </div>
                     </div>
                 </div>
@@ -47,7 +51,8 @@ if (User::isAdmin()) {
                             <a href="<?= Url::to(['/npa/index']) ?>"><h4>База документов администрации</h4></a>
                         </div>
                         <div class="panel-body">
-                            <p class="text-center"><br>База внутренних документов администрации Шарьинского муниципального района</p>
+                            <p class="text-center"><br>База внутренних документов администрации Шарьинского
+                                муниципального района</p>
                         </div>
                     </div>
                 </div>
@@ -94,68 +99,39 @@ if (User::isAdmin()) {
                 </div>
             </div>
 
-            <!--            <div class="row" id="plashki">
-            
-                            <div class="col-sm-4">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading text-right">
-                                        <div class="pull-left">
-                                            <a href="<?= Url::to(['/violation/index']) ?>"><?= Html::img('/img/Rules48.png', ['alt' => 'Административные правонарушения', 'width' => 40]) ?></a>
-                                        </div>
-                                        <a href="#"><h4>Журнал административных правонарушений</h4></a>
-                                    </div>
-                                    <div class="panel-body">
-                                        <p class="text-center">Учет административных правонарушений<br><br><span class="label label-danger">В разработке</span><br></p>
-                                    </div>
-                                </div>
-                            </div>
-            
-                            <div class="col-sm-4">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading text-right">
-                                        <div class="pull-left">
-                                            <a href="<?= Url::to(['/reestrmi/index']) ?>"><?= Html::img('/img/reestr48.png', ['alt' => 'Реестр муниципального имущества', 'width' => 40]) ?></a>
-                                        </div>
-                                        <a href="#"><h4>Реестр муниципального имущества</h4></a>
-                                    </div>
-                                    <div class="panel-body">
-                                        <p class="text-center"><br><br><span class="label label-danger">В разработке</span><br></p>
-                                    </div>
-                                </div>
-                            </div>
-            
-                            <div class="col-sm-4">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading text-right">
-                                        <div class="pull-left">
-                                            <a href="<?= Url::to(['/journal/index']) ?>"><?= Html::img('/img/msg.png', ['alt' => 'Журнал корреспонденции', 'width' => 40]) ?></a>
-                                        </div>
-                                        <a href="#"><h4>Журнал<br>корреспонденции </h4></a>
-                                    </div>
-                                    <div class="panel-body">
-                                        <p class="text-center">Учет входящей и исходящей корреспонденции. <br><br><span class="label label-danger">В разработке</span><br></p>
-                                    </div>
-                                </div>
-                            </div>
-            
-                        </div>-->
-<!--            <div class="row">-->
-<!--                <div class="col-sm-12 col-md-12 col-lg-12">-->
-<!--                    <a href="/uploads/programm/SpravkiBKsetup_ver._2.4.1.msi">-->
-<!--                        <h1>Скачать программное обеспечение "Справки БК" (версия 2.4.1)</h1>-->
-<!--                    </a>-->
-<!--                    <h1><small>Подготовка справок о доходах, расходах, об имуществе и обязательствах имущественного характера</small></h1>-->
-<!--                    <hr> -->
-<!--                </div>-->
-<!--            </div>      -->
-<!--            <div class="row">-->
-<!--                <div class="col-sm-6 col-md-6 col-lg-6">-->
-<!--                    <a href="/uploads/programm/instr_BK.doc"><h3>Инструкция по работе с программным обеспечением "Справки БК"</h3></a>-->
-<!--                </div>-->
-<!--                <div class="col-sm-6 col-md-6 col-lg-6 helbtn">-->
-<!--                    --><?php //require '_modal_install_spravkabk.php'; ?>
-<!--                </div>-->
-<!--            </div>-->
+            <div class="row" id="plashki">
+
+                <?php
+
+                echo GridView::widget([
+                    'dataProvider' => $dataProvider,
+//                    'filterModel' => $searchModel,
+                    'class' => 'index-table',
+                    'columns' => [
+                        ['class' => 'yii\grid\SerialColumn'],
+                        'id',
+                        'username',
+
+                    ],
+                ]);
+                ?>
+
+                <!--                <div class="col-sm-12 col-md-12 col-lg-12">-->
+                <!--                    <a href="/uploads/programm/SpravkiBKsetup_ver._2.4.1.msi">-->
+                <!--                        <h1>Скачать программное обеспечение "Справки БК" (версия 2.4.1)</h1>-->
+                <!--                    </a>-->
+                <!--                    <h1><small>Подготовка справок о доходах, расходах, об имуществе и обязательствах имущественного характера</small></h1>-->
+                <!--                    <hr> -->
+                <!--                </div>-->
+                <!--            </div>      -->
+                <!--            <div class="row">-->
+                <!--                <div class="col-sm-6 col-md-6 col-lg-6">-->
+                <!--                    <a href="/uploads/programm/instr_BK.doc"><h3>Инструкция по работе с программным обеспечением "Справки БК"</h3></a>-->
+                <!--                </div>-->
+                <!--                <div class="col-sm-6 col-md-6 col-lg-6 helbtn">-->
+                <!--                    --><?php //require '_modal_install_spravkabk.php'; ?>
+                <!--                </div>-->
+            </div>
         </div>
     </div>
 </div>
