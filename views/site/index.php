@@ -100,9 +100,10 @@ if (User::isAdmin()) {
             </div>
 
             <div class="row" id="plashki">
-                <h2>Список писем на контроле </h2>
+
                 <?php
                 if (isset($dataProvider) && $dataProvider->count != 0 ){
+                    echo "<h2>Список писем на контроле </h2>";
                     echo GridView::widget([
                         'dataProvider' => $dataProvider,
                         'class' => 'index-table',
