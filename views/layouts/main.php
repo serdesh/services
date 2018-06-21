@@ -68,6 +68,7 @@ $this->registerLinkTag(['rel' => 'shortcut icon', 'type' => 'image/x-icon', 'hre
                             ['label' => 'ФИАС', 'url' => ['/site/fias']],
                             ['label' => 'ФТП аккаунты', 'url' => ['/ftpaccounts/index']],
                             ['label' => 'Тестовая страница', 'url' => ['/site/test']],
+                            ['label' => 'Журнал', 'url' => ['/site/journal']],
                     ]];
 
                     $menuItems[] = ['label' => 'Справочники', 'items' => [

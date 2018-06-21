@@ -2,7 +2,10 @@
 
 namespace app\controllers;
 
+use app\models\Journal;
+use app\models\User;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
@@ -67,7 +70,23 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        if (!app()->user->isGuest){
+            $executor = User::getShortnameWitchoutDecodeChars(Yii::$app->user->identity->fio);
+            $dataProvider = new ActiveDataProvider([
+                'query' => Journal::find()
+                    ->select('*')
+                    ->where(['like', 'EXECUTOR_MAIL', $executor])
+                    ->andWhere(['ISPOLNENO' => '0'])
+                    ->andWhere(['not', ['SROK' => null]])
+                    ->orderBy(['ID_MAIL' => SORT_DESC, 'NUM_MAIL' => SORT_DESC]),
+            ]);
+            return $this->render('index', [
+                'dataProvider' => $dataProvider,
+            ]);
+        }
+
         return $this->render('index');
+
     }
 
     /**
@@ -226,6 +245,21 @@ class SiteController extends Controller
         }
         return $this->render('test', ['model' => $model]);
 
+    }
+
+    public function actionJournal()
+    {
+        $executor = User::getShortnameWitchoutDecodeChars(Yii::$app->user->identity->fio);
+        $dataProvider = new ActiveDataProvider([
+            'query' => Journal::find()
+                ->select('*')
+//                ->where(['like', 'EXECUTOR_MAIL', $executor])
+                ->orderBy(['ID_MAIL' => SORT_DESC, 'NUM_MAIL' => SORT_DESC])
+                ->limit(100),
+        ]);
+        return $this->render('journal', [
+            'dataProvider' => $dataProvider
+        ]);
     }
 
 

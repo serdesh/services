@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 
+use yii\db\ActiveRecord;
 use yii\helpers\Html;
 use yii\helpers\FileHelper;
 use yii2mod\ftp\FtpClient;
@@ -21,7 +22,7 @@ use yii2mod\ftp\FtpClient;
  * @property string $si_end_public
  * @property string $si_path_attach
  */
-class Siteinfo extends \yii\db\ActiveRecord
+class Siteinfo extends ActiveRecord
 {
 
     /**
@@ -41,9 +42,9 @@ class Siteinfo extends \yii\db\ActiveRecord
      * @inheritdoc
      */
     public static function tableName()
-    {
-        return '{{%siteinfo}}';
-    }
+{
+    return '{{%siteinfo}}';
+}
 
     /**
      * @inheritdoc

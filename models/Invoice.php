@@ -53,7 +53,7 @@ class Invoice extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public static function getZakazs()
+    public function getZakazs()
     {
         return $this->hasMany(Zakaz::className(), ['zak_invoice_id' => 'inv_id']);
     }
@@ -61,7 +61,7 @@ class Invoice extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public static function getZakProducts()
+    public function getZakProducts()
     {
         return $this->hasMany(Product::className(), ['prod_id' => 'zak_product_id'])->viaTable('{{%zakaz}}', ['zak_invoice_id' => 'inv_id']);
     }
