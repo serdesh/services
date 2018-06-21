@@ -33,9 +33,6 @@ tests/_support/_generated
 /.vagrant
 /vagrant
 
-#config folder
-/config
-
 #runtime folder
 /runtime
 
