@@ -100,20 +100,33 @@ if (User::isAdmin()) {
             </div>
 
             <div class="row" id="plashki">
-
+                <h2>Список писем на контроле </h2>
                 <?php
+                if (isset($dataProvider) && $dataProvider->count != 0 ){
+                    echo GridView::widget([
+                        'dataProvider' => $dataProvider,
+                        'class' => 'index-table',
+                        'columns' => [
+                            ['class' => 'yii\grid\SerialColumn'],
+                            [
+                                'attribute' => 'NUM_MAIL',
+                                'value' => function($data){
+                                    return $data->NUM_MAIL . '/' . $data->KOD_MAIL;
+                                }
+                            ],
+                            'DAT_MAIL:date',
+                            'FROM_MAIL',
+                            'NUM_SENDER_MAIL',
+                            'DAT_SENDER_MAIL:date',
+                            'NAME_INFO_MAIL',
+                            'SROK:date',
+                            'EXECUTOR_MAIL',
+//                            'ISPOLNENO',
 
-                echo GridView::widget([
-                    'dataProvider' => $dataProvider,
-//                    'filterModel' => $searchModel,
-                    'class' => 'index-table',
-                    'columns' => [
-                        ['class' => 'yii\grid\SerialColumn'],
-                        'id',
-                        'username',
+                        ],
+                    ]);
+                }
 
-                    ],
-                ]);
                 ?>
 
                 <!--                <div class="col-sm-12 col-md-12 col-lg-12">-->

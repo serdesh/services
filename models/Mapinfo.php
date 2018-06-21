@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\helpers\ArrayHelper;
+use \yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%map_info}}".
@@ -14,7 +15,7 @@ use yii\helpers\ArrayHelper;
  * @property string $mi_url
  * @property integer $mi_add_permission
  */
-class Mapinfo extends \yii\db\ActiveRecord {
+class Mapinfo extends ActiveRecord {
 
     /**
      * @inheritdoc

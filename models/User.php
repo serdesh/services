@@ -138,6 +138,16 @@ class User extends ActiveRecord implements IdentityInterface {
         return $arr_fio[0] . htmlspecialchars_decode('&nbsp;') . $arr_fio[1] . '.' . $arr_fio[2] . '.';
     }
 
+    public static function getShortnameWitchoutDecodeChars($fio) {
+        $arr_fio = explode(" ", $fio); //Разбиваем на Фамилию имя и отчество
+        $arr_fio[1] = mb_substr($arr_fio[1], 0, 1); //Получаем первую букву имени
+        $arr_fio[2] = mb_substr($arr_fio[2], 0, 1); //Первую букву отчества
+        $shortFio = $arr_fio[0] . ' ' . $arr_fio[1] . '.' . $arr_fio[2] . '.';
+        return $shortFio;
+    }
+
+
+
     public static function get_fio_by_userid($id) {
         return User::findOne(['id' => $id])->fio;
     }
