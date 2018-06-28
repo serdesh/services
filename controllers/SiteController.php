@@ -190,6 +190,9 @@ class SiteController extends Controller
         return $this->render('stat', ['model' => $model,]);
     }
 
+    /**
+     *
+     */
     public function actionStreetLists()
     {
         $city_code = Yii::$app->request->post('citycode');
