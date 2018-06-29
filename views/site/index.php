@@ -112,17 +112,26 @@ if (User::isAdmin()) {
                             [
                                 'attribute' => 'NUM_MAIL',
                                 'value' => function($data){
-                                    return $data->NUM_MAIL . '/' . $data->KOD_MAIL;
-                                }
+                                    return $data->NUM_MAIL . '/' . $data->KOD_MAIL . ' от ' . date('d.m.Y', strtotime($data->DAT_MAIL));
+                                },
+                                'label'=> 'Входящий номер и дата',
                             ],
-                            'DAT_MAIL:date',
                             'FROM_MAIL',
-                            'NUM_SENDER_MAIL',
-                            'DAT_SENDER_MAIL:date',
+                            [
+                                'attribute' => 'NUM_SENDER_MAIL',
+                                'value' => function($data){
+                                    return $data->NUM_SENDER_MAIL . ' от ' . date('d.m.Y', strtotime($data->DAT_SENDER_MAIL));
+                                },
+                                'label'=> 'Номер и дата отправителя',
+                            ],
                             'NAME_INFO_MAIL',
-                            'SROK:date',
+                            [
+                                    'attribute' => 'SROK',
+                                    'value' => function($data){
+                                        return date('d.m.Y', strtotime($data->SROK));
+                                    }
+                            ],
                             'EXECUTOR_MAIL',
-//                            'ISPOLNENO',
 
                         ],
                     ]);
