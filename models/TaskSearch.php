@@ -8,12 +8,14 @@ use yii\data\ActiveDataProvider;
 /**
  * TaskSearch represents the model behind the search form about `app\models\Task`.
  */
-class TaskSearch extends Task {
+class TaskSearch extends Task
+{
 
     /**
      * @inheritdoc
      */
-    public function rules() {
+    public function rules()
+    {
         return [
             [['task_id', 'task_user', 'task_order', 'task_urgency', 'task_deleted'], 'integer'],
             [['task_description', 'task_notes', 'task_data', 'task_solution'], 'safe'],
@@ -23,7 +25,8 @@ class TaskSearch extends Task {
     /**
      * @inheritdoc
      */
-    public function scenarios() {
+    public function scenarios()
+    {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -35,8 +38,14 @@ class TaskSearch extends Task {
      *
      * @return ActiveDataProvider
      */
-    public function search($params) {
-        $query = Task::find()->where(['task_deleted'=> 0])->orderBy(['task_urgency' => SORT_ASC, 'task_order' => SORT_ASC]);
+    public function search($params)
+    {
+        $taskStatus = app()->getRequest()->get('status');
+        if ($taskStatus == Task::TASK_DONE) {
+            $query = Task::find()->where(['task_deleted' => 1])->orderBy(['task_urgency' => SORT_ASC, 'task_order' => SORT_ASC]);
+        } else {
+            $query = Task::find()->where(['task_deleted' => 0])->orderBy(['task_urgency' => SORT_ASC, 'task_order' => SORT_ASC]);
+        }
         //$query = Task::find();
         // add conditions that should always apply here
 
@@ -63,8 +72,8 @@ class TaskSearch extends Task {
         ]);
 
         $query->andFilterWhere(['like', 'task_description', $this->task_description])
-                ->andFilterWhere(['like', 'task_notes', $this->task_notes])
-                ->andFilterWhere(['like', 'task_solution', $this->task_solution]);
+            ->andFilterWhere(['like', 'task_notes', $this->task_notes])
+            ->andFilterWhere(['like', 'task_solution', $this->task_solution]);
 
         return $dataProvider;
     }

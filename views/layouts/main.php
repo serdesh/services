@@ -21,7 +21,7 @@ $this->registerLinkTag(['rel' => 'shortcut icon', 'type' => 'image/x-icon', 'hre
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?= Html::csrfMetaTags() ?>
         <title><?= Html::encode('Сервисы ШМР') ?></title>
-        <link href="fontawesome/css/font-awesome.min.css" rel="stylesheet">
+        <link href="/fontawesome/css/font-awesome.min.css" rel="stylesheet">
         <?php $this->head() ?>
         <style media='print' type='text/css'>
             #navbar-iframe {display: none; height: 0; visibility: hidden;}
@@ -61,8 +61,11 @@ $this->registerLinkTag(['rel' => 'shortcut icon', 'type' => 'image/x-icon', 'hre
                 }
 
                 if (User::isUserAdmin()) {
+                    $menuItems[] = ['label' => 'Задачи', 'items' => [
+                        ['label' => 'Текущие', 'url' => ['/task/index', 'status' => 'current']],
+                        ['label' => 'Исполненные', 'url' => ['/task/index', 'status' => 'done']],
+                    ]];
                     $menuItems[] = ['label' => 'Управление', 'items' => [
-                            ['label' => 'Задачник', 'url' => ['/task/index']],
                             ['label' => 'Закупки оборудования', 'url' => ['/invoice/index']],
                             ['label' => 'GII', 'url' => ['/gii']],
                             ['label' => 'ФИАС', 'url' => ['/site/fias']],

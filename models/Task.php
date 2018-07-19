@@ -18,6 +18,9 @@ use yii\db\ActiveRecord;
  */
 class Task extends ActiveRecord
 {
+    const TASK_CURRENT = 'current';
+    const TASK_DONE = 'done';
+
     /**
      * @inheritdoc
      */

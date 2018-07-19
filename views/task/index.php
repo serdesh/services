@@ -3,12 +3,20 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use app\models\Task;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\TaskSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Задачник';
+$taskStatus = app()->getRequest()->get('status');
+
+if ($taskStatus == Task::TASK_DONE){
+    $this->title = 'Исполненные задачи';
+} else {
+    $this->title = 'Текущие задачи';
+}
+
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="container-fluid">
