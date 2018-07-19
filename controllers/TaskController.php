@@ -47,6 +47,7 @@ class TaskController extends Controller
      * Displays a single Task model.
      * @param string $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionView($id)
     {
@@ -79,6 +80,7 @@ class TaskController extends Controller
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param string $id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionUpdate($id)
     {
@@ -98,11 +100,17 @@ class TaskController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param string $id
      * @return mixed
+     * @throws NotFoundHttpException
+     * @throws \Exception
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
+//        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model -> task_deleted = 1;
+        $model->save();
         return $this->redirect(['index']);
     }
 

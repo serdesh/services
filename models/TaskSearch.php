@@ -2,10 +2,8 @@
 
 namespace app\models;
 
-use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Task;
 
 /**
  * TaskSearch represents the model behind the search form about `app\models\Task`.
@@ -38,7 +36,7 @@ class TaskSearch extends Task {
      * @return ActiveDataProvider
      */
     public function search($params) {
-        $query = Task::find()->orderBy(['task_urgency' => SORT_ASC, 'task_order' => SORT_ASC]);
+        $query = Task::find()->where(['task_deleted'=> 0])->orderBy(['task_urgency' => SORT_ASC, 'task_order' => SORT_ASC]);
         //$query = Task::find();
         // add conditions that should always apply here
 

@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Удалить', ['delete', 'id' => $model->task_id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Уверены, что хотите удалить задачу ' . $model-> task_id . '?',
+                'confirm' => 'Уверены, что хотите удалить задачу ' . $model->task_id . '?',
                 'method' => 'post',
             ],
         ]) ?>
@@ -31,26 +31,24 @@ $this->params['breadcrumbs'][] = $this->title;
             'task_id',
             'task_description:ntext',
             'task_notes:ntext',
-            //'task_user',
+            'task_solution:ntext',
             [
                 'attribute' => 'task_user',
-                'value' => function($data){
+                'value' => function ($data) {
                     return app\models\User::findOne(['id' => $data->task_user])->fio;
                 }
             ],
-            //'task_order',
-            //'task_urgency',
             [
                 'attribute' => 'task_urgency',
-                'value' => function($data) {
+                'value' => function ($data) {
                     return \app\models\Urgency::findOne(['urg_id' => $data->task_urgency])->urg_name;
                 }
             ],
-            //'task_data',
-                    [
-                        'attribute' => 'task_data',
-                        'value' => date('d.m.Y H:i', strtotime($model->task_data))
-                    ],
+            [
+                'attribute' => 'task_data',
+                'value' => date('d.m.Y H:i', strtotime($model->task_data))
+            ],
+
         ],
     ]) ?>
 

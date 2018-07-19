@@ -2,20 +2,21 @@
 
 namespace app\models;
 
-use Yii;
-use yii\helpers\VarDumper;
+use yii\db\ActiveRecord;
 /**
  * This is the model class for table "{{%task}}".
  *
- * @property string $task_id
+ * @property integer $task_id
  * @property string $task_description
  * @property string $task_notes
- * @property string $task_user
- * @property string $task_order
- * @property string $task_urgency
+ * @property integer $task_user
+ * @property integer $task_order
+ * @property integer $task_urgency
  * @property string $task_data
+ * @property integer $task_deleted
+ * @property string $task_solution
  */
-class Task extends \yii\db\ActiveRecord
+class Task extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -32,8 +33,8 @@ class Task extends \yii\db\ActiveRecord
     {
         return [
             [['task_description'], 'required'],
-            [['task_description', 'task_notes'], 'string'],
-            [['task_user', 'task_order', 'task_urgency'], 'integer'],
+            [['task_description', 'task_notes', 'task_solution'], 'string'],
+            [['task_user', 'task_order', 'task_urgency', 'task_deleted'], 'integer'],
             [['task_data'], 'safe'],
             [['task_order'], 'unique'],
         ];
@@ -52,6 +53,8 @@ class Task extends \yii\db\ActiveRecord
             'task_order' => 'Порядок',
             'task_urgency' => 'Важность',
             'task_data' => 'Дата',
+            'task_deleted' => 'Задача помечена на удаление',
+            'task_solution' => 'Результат'
         ];
     }
     

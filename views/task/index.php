@@ -2,8 +2,6 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-use yii\helpers\Url;
-use app\models\Task;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
@@ -64,6 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 ],
                 'task_notes:ntext',
+                'task_solution:ntext',
                 ['class' => 'yii\grid\ActionColumn'],
             ],
         ]);

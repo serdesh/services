@@ -24,11 +24,13 @@ use app\models\Urgency;
         ?>
         <?php $items = ArrayHelper::map(User::find()->orderBy(['fio' => 'ASC'])->all(), 'id', 'fio'); ?>
 
-        <?= $form->field($model, 'task_user')->dropDownList($items, ['value' => Yii::$app->user->identity->id]) ?>
+        <?= $form->field($model, 'task_user')->dropDownList($items, ['value' => Yii::$app->user->id]) ?>
 
         <?= $form->field($model, 'task_description')->textarea(['rows' => 6]) ?>
 
         <?= $form->field($model, 'task_notes')->textarea(['rows' => 6]) ?>
+
+        <?= $form->field($model, 'task_solution')->textarea(['rows' => 6]) ?>
 
         <?= $form->field($model, 'task_done')->hiddenInput(['value' => 0])->label('')?>
 

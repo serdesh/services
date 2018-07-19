@@ -2,7 +2,7 @@
 
 $params = require(__DIR__ . '/params.php');
 $db = require(__DIR__ . '/db.php');
-$db = require(__DIR__ . '/dbJournal.php');
+$dbJournal = require(__DIR__ . '/dbJournal.php');
 
 $config = [
     'id' => 'basic-console',
