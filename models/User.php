@@ -146,8 +146,6 @@ class User extends ActiveRecord implements IdentityInterface {
         return $shortFio;
     }
 
-
-
     public static function get_fio_by_userid($id) {
         return User::findOne(['id' => $id])->fio;
     }
@@ -164,9 +162,9 @@ class User extends ActiveRecord implements IdentityInterface {
             [['username'], 'string', 'max' => 30],
             [['auth_key'], 'string', 'max' => 32],
             [['password_hash', 'password_reset_token', 'email', 'openpass'], 'string', 'max' => 255],
-            [['fio'], 'string', 'max' => 100],
+            [['fio', 'yandexMailUID'], 'string', 'max' => 100],
             [['email'], 'unique'],
-            [['username'], 'unique'],
+            [['username', 'yandexMailUID'], 'unique'],
             [['password_reset_token'], 'unique'],
             [['fio'], 'unique'],
         ];
@@ -188,7 +186,8 @@ class User extends ActiveRecord implements IdentityInterface {
             'role' => 'Роль',
             'fio' => 'Ф.И.О.',
             'division_id' => 'Код подразделения',
-            'openpass' => 'Пароль'
+            'openpass' => 'Пароль',
+            'yandexMailUID' => 'UID пользователя Yandex'
         ];
     }
 
@@ -222,6 +221,16 @@ class User extends ActiveRecord implements IdentityInterface {
      */
     public function removePasswordResetToken() {
         $this->password_reset_token = null;
+    }
+
+    /**
+     * Возвращает часть мыла до собаки
+     * @param $email адрес электронной почты
+     * @return mixed
+     */
+    public static function getUserLoginFromEmail($email){
+        $arr = explode('@', $email);
+        return $arr[0];
     }
 
 }

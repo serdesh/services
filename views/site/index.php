@@ -112,7 +112,9 @@ if (User::isAdmin()) {
                             [
                                 'attribute' => 'NUM_MAIL',
                                 'value' => function($data){
-                                    return $data->NUM_MAIL . '/' . $data->KOD_MAIL . ' от ' . date('d.m.Y', strtotime($data->DAT_MAIL));
+                                    $num = $data->NUM_MAIL . '/' . $data->KOD_MAIL;
+
+                                    return $num . ' от ' . date('d.m.Y', strtotime($data->DAT_MAIL));
                                 },
                                 'label'=> 'Входящий номер и дата',
                             ],
@@ -120,8 +122,16 @@ if (User::isAdmin()) {
                             [
                                 'attribute' => 'NUM_SENDER_MAIL',
                                 'value' => function($data){
-                                    return $data->NUM_SENDER_MAIL . ' от ' . date('d.m.Y', strtotime($data->DAT_SENDER_MAIL));
+                                    $num = $data->NUM_SENDER_MAIL;
+                                    $yandexUID = app()->user->identity->yandexMailUID;
+
+                                    if ($yandexUID){
+                                        //формируем ссылку для поиска в яндекс почте
+                                        $num = '<a  target="_blank" href="https://mail.yandex.ru/?uid=' . $yandexUID . '&login=' . User::getUserLoginFromEmail(app()->user->identity->email) . '#search?request=' . $num. '&fid=1">' . $num . '</a>';
+                                    }
+                                    return $num . ' от ' . date('d.m.Y', strtotime($data->DAT_SENDER_MAIL));
                                 },
+                                'format' => 'raw',
                                 'label'=> 'Номер и дата отправителя',
                             ],
                             'NAME_INFO_MAIL',

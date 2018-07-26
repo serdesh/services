@@ -60,7 +60,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'password',
                 'value' => Yii::$app->getSecurity()->decryptByPassword(Yii::$app->user->identity->password_hash, Yii::$app->user->identity->password_reset_token),
                 //value' => Yii::$app->user->identity->password_reset_token,
-            ]
+            ],
+            'yandexMailUID:text',
+
     ],
     ]) ?>
 
