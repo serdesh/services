@@ -30,6 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'div_boss',
                 'value' => function ($data){
+                    if ($data->div_boss != 0)
                     return User::get_fio_by_userid($data->div_boss);
                 }
             ],
