@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use app\models\User;
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\DivisionSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -28,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'div_boss',
                 'value' => function ($data){
-                    return app\models\User::findOne(['id' => $data->div_boss])->fio;
+                    return User::get_fio_by_userid($data->div_boss);
                 }
             ],
             'div_note:ntext',

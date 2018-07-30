@@ -38,7 +38,7 @@ class DivisionSearch extends Division {
      * @return ActiveDataProvider
      */
     public function search($params) {
-        $query = Division::find()->orderBy(['div_name' => ASC]);
+        $query = Division::find()->orderBy(['div_name' => SORT_ASC]);
 
         // add conditions that should always apply here
 
