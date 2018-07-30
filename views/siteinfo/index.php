@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
     <?php
-    if (User::isUserAdmin(Yii::$app->user->identity->username)) {
+    if (User::isUserAdmin()) {
         $buttons = '{view} {update} {delete}';
     } else {
         $buttons = '{view} {delete}';
@@ -121,14 +121,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\ActionColumn',
                 'visibleButtons' => [
                     'delete' => function ($model, $key, $index) {
-                        if (User::isUserAdmin(Yii::$app->user->identity->username) or (Yii::$app->user->identity->id == $model->si_user_id)) {
+                        if (User::isUserAdmin() or (Yii::$app->user->identity->id == $model->si_user_id)) {
                             return true;
                         } else {
                             return false;
                         }
                     },
                     'update' => function ($model, $key, $index) {
-                        return User::isUserAdmin(Yii::$app->user->identity->username);
+                        return User::isUserAdmin();
                     }
                 ]
             ],

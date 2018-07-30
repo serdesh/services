@@ -12,7 +12,6 @@ use yii\web\UploadedFile;
 use yii\filters\VerbFilter;
 use app\models\Mapinfo;
 use app\models\User;
-use ZipArchive;
 use \app\components\ImgHelper;
 use \app\components\ZipFiles;
 use yii\filters\AccessControl;
@@ -215,6 +214,7 @@ class SiteinfoController extends Controller
      */
     public function actionDelete($id)
     {
+
         //Проверяем права на удаление
         if (User::isAdmin() or Siteinfo::isAuthor($id)) { //Если админ или автор материала
             //Удаляем папку
@@ -277,14 +277,14 @@ class SiteinfoController extends Controller
 
     /**
      * @param $sourceDir Папка-источник
-     * @param $destDir Папка назначения
+     * @param $destDir
      * @param $id
      */
 
     /**
      * @param $sourceDir Папка-источник
-     * @param $destDir Папка назначения
-     * @param $id Код информации
+     * @param $destDir
+     * @param $id
      * @return string
      * @throws NotFoundHttpException
      */
@@ -307,11 +307,10 @@ class SiteinfoController extends Controller
     }
 
     /**
-     * @param $sourceDir Папка-источник
-     * @param $infoId Код информации
+     * @param $sourceDir
      * @return string
      */
-    public function actionDownloadFiles($sourceDir, $infoId)
+    public function actionDownloadFiles($sourceDir)
     {
         if (is_dir($sourceDir)) {
             $file = ZipFiles::zipDirectory($sourceDir);
@@ -331,6 +330,7 @@ class SiteinfoController extends Controller
             header('Content-Length: ' . filesize($file));
             // читаем файл и отправляем его пользователю
             readfile($file);
+            return true;
         }
     }
 

@@ -117,6 +117,9 @@ class User extends ActiveRecord implements IdentityInterface {
         }
     }
 
+    /**
+     * @return bool
+     */
     public static function isUserAdmin() {
         if (!Yii::$app->user->isGuest) {
             $username = Yii::$app->user->identity;
