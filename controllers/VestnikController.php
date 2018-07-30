@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\ZipFiles;
 use Yii;
 use app\models\Vestnik;
 use app\models\VestnikSearch;
@@ -83,11 +84,11 @@ class VestnikController extends Controller {
             }
 
             $model->file = UploadedFile::getInstance($model, 'file');
+
             if (!is_dir($pathDestinationDirectory)) {
                 mkdir($pathDestinationDirectory, 0777, TRUE);
             }
             $model->vest_pathfile = $pathDestinationDirectory . '/Vestnik' . $model->vest_fullnumber . '_' . date('Y', strtotime($model->vest_data)) . '.zip';
-
             if (!$model->file) {
                 $model->addError('warning', 'Необходимо прикрепить файл с вестником.');
                 return $this->render('create', [
@@ -98,8 +99,8 @@ class VestnikController extends Controller {
         if ($model->save()) {
             if ($model->file && $model->validate()) {
                 $path = $pathDestinationDirectory . '/Vestnik' . $model->vest_fullnumber . '_' . $model->vest_data . '.' . $model->file->extension; //отображает корректно руские названия файлов
-                Vestnik::zipFile($model->file, $model->vest_pathfile, Inflector::transliterate(mb_strtolower($model->file->baseName)) . '.' . $model->file->extension);
-                $model->file->saveAs($path);
+                ZipFiles::zipFile($model->file, $model->vest_pathfile, Inflector::transliterate(mb_strtolower($model->file->baseName)) . '.' . $model->file->extension);
+//                $model->file->saveAs($path);
             }
             return $this->redirect(['view', 'id' => $model->vest_id]);
         } else {

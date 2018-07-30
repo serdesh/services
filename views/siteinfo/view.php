@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="btn-group">
         <?php
         if (User::isAdmin()) {
-            echo Html::a('Изменить', ['update', 'id' => $model->si_id], ['class' => 'btn btn-primary']);
+            echo Html::a('Редактировать', ['update', 'id' => $model->si_id], ['class' => 'btn btn-primary']);
             Modal::begin([
                 'header' => '<h2>Отправка файла по FTP</h2>',
                 'toggleButton' => [
@@ -103,7 +103,14 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'Files',
                 'format' => 'raw',
-                'value' => Siteinfo::getListFiles($model->si_path_attach),
+                'value' => Siteinfo::getListFiles($model->si_path_attach) . '<br>'
+                    . Html::a('Сохранить все файлы', Url::toRoute([
+                        'siteinfo/download-files',
+                        'sourceDir' => $model->si_path_attach,
+                        'infoId' => $model->si_id,
+
+                    ]),
+                        ['class' => 'btn btn-info',]),
             ],
             [
                 'attribute' => 'status',
@@ -131,7 +138,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
     <?php
     if (isset($result)) {
-        \yii\helpers\VarDumper::dump($result,1, true);
+        \yii\helpers\VarDumper::dump($result, 1, true);
     }
     ?>
 

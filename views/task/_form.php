@@ -40,7 +40,8 @@ use app\models\Urgency;
         ?>
         <?php echo $form->field($model, 'task_urgency')->dropDownList($items_urg, []) ?>
 
-     
+        <?php echo $form->field($model, 'task_deleted')->dropDownList(['0' => 'Активна', '1' => 'Удалена']) ?>
+
         <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Создать' : 'Сохранить изменения', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>

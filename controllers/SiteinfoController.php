@@ -14,6 +14,7 @@ use app\models\Mapinfo;
 use app\models\User;
 use ZipArchive;
 use \app\components\ImgHelper;
+use \app\components\ZipFiles;
 use yii\filters\AccessControl;
 
 
@@ -141,14 +142,14 @@ class SiteinfoController extends Controller
                         $tmpFile = $file->tempName;
                         if (getimagesize($tmpFile)) {
                             //Еслии картинка - сжимаем
-                            $path = $path_attach . '/' . time() . $counter .'.' . $file->extension;
+                            $path = $path_attach . '/' . time() . $counter . '.' . $file->extension;
                             ImgHelper::resizeImage($tmpFile, $path, 800);
                         } else {
                             //Если не картинка - обрезаем длинное название и сохраняем
                             $fileName = substr(app()->transliter->translate($file->baseName), 0, 70);
 //                            $fileName = app()->transliter->translate($file->baseName);
 //                            $fileName = time();
-                            $path = $path_attach . '/' . $fileName . $counter.  '.' . $file->extension;
+                            $path = $path_attach . '/' . $fileName . $counter . '.' . $file->extension;
                             $file->saveAs($path);
                         }
                     }
@@ -156,6 +157,7 @@ class SiteinfoController extends Controller
 
             }
             //return $this->redirect(['view', 'id' => $model->si_id]);
+            app()->session->setFlash('success', 'Материал успешно направлен для размещения на сайте');
             return $this->redirect(['index']);
         } else {
             return $this->render('create', [
@@ -217,16 +219,19 @@ class SiteinfoController extends Controller
         if (User::isAdmin() or Siteinfo::isAuthor($id)) { //Если админ или автор материала
             //Удаляем папку
             $dir = Siteinfo::findOne(['si_id' => $this->findModel($id)->si_id])->si_path_attach;
-            if ($dir){
+            if ($dir) {
                 Siteinfo::removeDirectory($dir);
             } else {
-                app()->session->setFlash('eroor', 'Не верный путь.' . $dir);
+                app()->session->setFlash('error', 'Не верный путь.' . $dir);
+                return $this->redirect(['index']);
             }
             $this->findModel($id)->delete();
-            return $this->redirect(['index']);
+            app()->session->setFlash('success', 'Материал успешно удален из базы');
         } else {
-            return \yii\web\HttpException('У вас нет доступа к операции удаления');
+//            return \yii\web\HttpException('У вас нет доступа к операции удаления');
+            app()->session->setFlash('error', 'У вас нет доступа к операции удаления');
         }
+        return $this->redirect(['index']);
     }
 
     /**
@@ -270,36 +275,20 @@ class SiteinfoController extends Controller
         }
     }
 
-    public function actionZipdirectory($sourceDir, $destDir, $id)
-    {
-        $zip = new ZipArchive();
-        //$filename = "D:/test/arhiv.zip";
-        $filename = $destDir . '/' . microtime(true) . '.zip';
-        if (!is_dir($destDir)) {
-            mkdir($destDir);
-        }
+    /**
+     * @param $sourceDir Папка-источник
+     * @param $destDir Папка назначения
+     * @param $id
+     */
 
-        if (!$zip->open($filename, ZIPARCHIVE::CREATE)) {
-            exit("Не могу открыть " . $filename . '<br>' . $destDir);
-        }
-
-        if ($objs = glob($sourceDir . "/*")) {
-            foreach ($objs as $obj) {
-                if (is_file($obj)) {
-                    $zip->addFile($obj, '/' . basename($obj));
-                }
-            }
-        }
-        //$zippedcount = $zip->numFiles;
-        $zip->close();
-        unset($zip);
-        //return $this->render('files', ['model' => $this->findModel($id), 'zippedcount' => $zippedcount]);
-        //\yii\helpers\VarDumper::dump(Yii::getAlias('@webroot/' . $filename));
-        //Yii::$app->response->sendFile(Yii::getAlias('@webroot/' . $filename));
-        Yii::$app->response->sendFile($filename, null, ['mimeType' => 'application/octet-stream']);
-    }
-
-    public function actionCopyfiles($sourceDir, $destDir, $id)
+    /**
+     * @param $sourceDir Папка-источник
+     * @param $destDir Папка назначения
+     * @param $id Код информации
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionCopyFiles($sourceDir, $destDir, $id)
     {
         $count = 0;
         if (!file_exists($destDir)) {
@@ -315,6 +304,34 @@ class SiteinfoController extends Controller
             }
         }
         return $this->render('files', ['model' => $this->findModel($id), 'count' => $count]);
+    }
+
+    /**
+     * @param $sourceDir Папка-источник
+     * @param $infoId Код информации
+     * @return string
+     */
+    public function actionDownloadFiles($sourceDir, $infoId)
+    {
+        if (is_dir($sourceDir)) {
+            $file = ZipFiles::zipDirectory($sourceDir);
+            // сбрасываем буфер вывода PHP, чтобы избежать переполнения памяти выделенной под скрипт
+            // если этого не сделать файл будет читаться в память полностью!
+            if (ob_get_level()) {
+                ob_end_clean();
+            }
+
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename=' . basename($file));
+            header('Content-Transfer-Encoding: binary');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file));
+            // читаем файл и отправляем его пользователю
+            readfile($file);
+        }
     }
 
 }

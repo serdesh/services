@@ -171,14 +171,17 @@ class Siteinfo extends ActiveRecord
      */
     public static function removeDirectory($dir)
     {
-//        _end(glob($dir . "/*"));
+        self::removeFiles($dir);
+        if (is_dir($dir)) {
+            rmdir($dir);
+        }
+    }
+
+    public static function removeFiles($dir) {
         if ($objs = glob($dir . "/*")) {
             foreach ($objs as $obj) {
                 is_dir($obj) ? self::removeDirectory($obj) : unlink($obj);
             }
-        }
-        if (is_dir($dir)) {
-            rmdir($dir);
         }
     }
 

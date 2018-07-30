@@ -36,7 +36,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'vest_data',
                 'value' => date('d.m.Y', strtotime($model->vest_data)),
             ],
-            'vest_pathfile',
+            [
+                    'attribute' => 'vest_pathfile',
+                    'format' => 'raw',
+                    'value' => \yii\helpers\Html::a($model->vest_pathfile, $model->vest_pathfile)
+            ]
+
         ],
     ])
     ?>

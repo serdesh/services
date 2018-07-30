@@ -60,9 +60,9 @@ class Vestnik extends ActiveRecord
     }
 
     /**
-     * @param $sourceFile
-     * @param $destfile
-     * @param $filename
+     * @param $sourceFile Файл для архивации
+     * @param $destfile Архивированный файл
+     * @param $filename Имя файла
      */
     public static function zipFile($sourceFile, $destfile, $filename)
     {

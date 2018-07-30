@@ -107,10 +107,20 @@ class TaskController extends Controller
      */
     public function actionDelete($id)
     {
-//        $this->findModel($id)->delete();
+
         $model = $this->findModel($id);
-        $model -> task_deleted = 1;
+
+        if ($model->task_deleted) {
+            $model->delete();
+            app()->session->setFlash('success', 'Задача успешно удалена');
+            return $this->redirect(['index', 'status' => 'done']);
+        }
+
+        $model->task_deleted = 1;
+        $model->task_urgency = 3; //Важность обычная
         $model->save();
+        app()->session->setFlash('success', 'Задача помечена как исполненная');
+
         return $this->redirect(['index']);
     }
 
@@ -129,6 +139,6 @@ class TaskController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    
-    
+
+
 }
