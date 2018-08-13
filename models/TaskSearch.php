@@ -42,12 +42,12 @@ class TaskSearch extends Task
     {
         $taskStatus = app()->getRequest()->get('status');
         if ($taskStatus == Task::TASK_DONE) {
-            $query = Task::find()->where(['task_deleted' => 1])->orderBy(['task_urgency' => SORT_ASC, 'task_order' => SORT_ASC]);
+            $query = Task::find()->where(['task_deleted' => 1])->orderBy(['task_data' => SORT_DESC]);
         } else {
             $query = Task::find()->where(['task_deleted' => 0])->orderBy(['task_urgency' => SORT_ASC, 'task_order' => SORT_ASC]);
         }
         //$query = Task::find();
-        // add conditions that should always apply here
+        // add conditions that should alwa  ys apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

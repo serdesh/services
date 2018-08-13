@@ -116,7 +116,7 @@ class TaskController extends Controller
             return $this->redirect(['index', 'status' => 'done']);
         }
 
-        $model->task_deleted = 1;
+        $model->task_deleted = 1; //пометка на удаление
         $model->task_urgency = 3; //Важность обычная
         $model->save();
         app()->session->setFlash('success', 'Задача помечена как исполненная');

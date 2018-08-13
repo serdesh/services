@@ -6,8 +6,8 @@ use yii\widgets\Pjax;
 use app\models\User;
 use app\models\Mapinfo;
 use app\models\Statusinfo;
-//use yii\web\View;
 use yii\helpers\Url;
+use yii\bootstrap\Modal;
 
 /**
  * @var $this yii\web\View
@@ -19,12 +19,13 @@ $this->title = 'Информация для сайта';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?php if( Yii::$app->session->hasFlash('success') ): ?>
+<?php if (Yii::$app->session->hasFlash('success')): ?>
     <div class="alert alert-success alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
         <?php echo Yii::$app->session->getFlash('success'); ?>
     </div>
-<?php endif;?>
+<?php endif; ?>
 
 <div class="container-fluid siteinfo-index">
 
@@ -34,9 +35,19 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php // echo $this->render('_search', ['model' => $searchModel]);     ?>
         </div>
         <div class="col-md-2 col-sm-12">
-            <h1>
-                <?= Html::a('Добавить информацию', ['create'], ['class' => 'btn btn-block btn-success']) ?>
-            </h1>
+                <?php
+                //echo Html::a('Добавить информацию', ['create'], ['class' => 'btn btn-block btn-success'])
+                Modal::begin([
+                    'header' => '<h3>Изменение порядка отправки информации</h3>',
+                    'toggleButton' => [
+                        'label' => 'Добавить информацию',
+                        'class' => 'btn btn-success'
+                    ],
+//                'footer' => 'Дешкович С.С.  '
+                ]);
+                include_once '_ad.php';
+                Modal::end();
+                ?>
         </div>
     </div>
 
