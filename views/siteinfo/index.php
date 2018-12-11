@@ -7,7 +7,6 @@ use app\models\User;
 use app\models\Mapinfo;
 use app\models\Statusinfo;
 use yii\helpers\Url;
-use yii\bootstrap\Modal;
 
 /**
  * @var $this yii\web\View
@@ -36,17 +35,17 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div class="col-md-2 col-sm-12">
                 <?php
-                //echo Html::a('Добавить информацию', ['create'], ['class' => 'btn btn-block btn-success'])
-                Modal::begin([
-                    'header' => '<h3>Изменение порядка отправки информации</h3>',
-                    'toggleButton' => [
-                        'label' => 'Добавить информацию',
-                        'class' => 'btn btn-success'
-                    ],
-//                'footer' => 'Дешкович С.С.  '
-                ]);
-                include_once '_ad.php';
-                Modal::end();
+                echo Html::a('Добавить информацию', ['create'], ['class' => 'btn btn-block btn-success'])
+//                Modal::begin([
+//                    'header' => '<h3>Изменение порядка отправки информации</h3>',
+//                    'toggleButton' => [
+//                        'label' => 'Добавить информацию',
+//                        'class' => 'btn btn-success'
+//                    ],
+////                'footer' => 'Дешкович С.С.  '
+//                ]);
+//                include_once '_ad.php';
+//                Modal::end();
                 ?>
         </div>
     </div>

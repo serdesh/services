@@ -3,7 +3,6 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
-use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\VestnikSearch */
@@ -19,17 +18,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?php
-        //echo Html::a('Добавить вестник', ['create'], ['class' => 'btn btn-success'])
-                Modal::begin([
-                    'header' => '<h3>Изменение порядка отправки информации</h3>',
-                    'toggleButton' => [
-                        'label' => 'Добавить вестник',
-                        'class' => 'btn btn-success'
-                    ],
-//                'footer' => 'Дешкович С.С.  '
-                ]);
-                include_once '_ad.php';
-                Modal::end();
+        echo Html::a('Добавить вестник', ['create'], ['class' => 'btn btn-success'])
+//                Modal::begin([
+//                    'header' => '<h3>Изменение порядка отправки информации</h3>',
+//                    'toggleButton' => [
+//                        'label' => 'Добавить вестник',
+//                        'class' => 'btn btn-success'
+//                    ],
+////                'footer' => 'Дешкович С.С.  '
+//                ]);
+//                include_once '_ad.php';
+//                Modal::end();
         ?>
     </p>
 <?php Pjax::begin(); ?>    <?= GridView::widget([
